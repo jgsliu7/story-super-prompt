@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第8章 · 工厂 — 《一行毁灭世界的提示词》</title>
+<style>
+  :root {
+    --bg: #fafaf8;
+    --text: #1a1a2e;
+    --text-dim: #5a5a6e;
+    --accent: #2563eb;
+    --border: #e0e0e0;
+    --code-bg: #f4f4f5;
+    --font: 'Segoe UI', system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Noto Serif SC', serif;
+    --mono: 'SF Mono', 'Cascadia Code', 'JetBrains Mono', 'PingFang SC', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    line-height: 2;
+    font-size: 17px;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .chapter-header {
+    text-align: center; padding: 32px 0 48px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .chapter-header h1 {
+    font-size: 28px; font-weight: 700; color: #111; margin-bottom: 8px;
+  }
+  .chapter-nav {
+    display: flex; justify-content: space-between; margin-top: 20px;
+  }
+  .chapter-nav a {
+    text-decoration: none; color: var(--accent); font-size: 14px;
+    padding: 6px 16px; border: 1px solid var(--border); border-radius: 6px;
+    transition: all .2s;
+  }
+  .chapter-nav a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .chapter-nav a.disabled { opacity: 0.3; pointer-events: none; }
+
+  /* ── Typography ── */
+  h2 { font-size: 22px; margin: 40px 0 16px; color: #111; }
+  h3 { font-size: 18px; margin: 32px 0 12px; color: #222; }
+  h4 { font-size: 16px; margin: 28px 0 8px; }
+  p { margin: 12px 0; text-indent: 2em; }
+  p:first-of-type { text-indent: 0; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  strong { color: #111; }
+
+  /* ── Code ── */
+  code {
+    font-family: var(--mono); font-size: 14px;
+    background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+  }
+  pre {
+    background: #1a1a2e; color: #c8c8d4; padding: 16px 20px;
+    border-radius: 8px; overflow-x: auto; font-size: 13px;
+    line-height: 1.7; margin: 16px 0;
+    font-family: var(--mono);
+  }
+  pre code { background: transparent; padding: 0; color: inherit; }
+
+  /* ── Blockquotes ── */
+  blockquote {
+    border-left: 3px solid var(--accent); margin: 16px 0; padding: 12px 20px;
+    background: rgba(37,99,235,0.03); border-radius: 0 6px 6px 0;
+    color: var(--text-dim);
+  }
+  blockquote p { text-indent: 0; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th { text-align: left; padding: 10px 14px; background: var(--code-bg); font-weight: 600; border-bottom: 2px solid var(--border); }
+  td { padding: 8px 14px; border-bottom: 1px solid var(--border); }
+
+  /* ── K-247 notes (italic paras) ── */
+  em strong { color: var(--accent); }
+
+  /* ── Section dividers ── */
+  .section-break, hr { text-align: center; margin: 40px 0; color: var(--text-dim); }
+
+  /* ── Lists ── */
+  ul, ol { margin: 12px 0 12px 2em; }
+  li { margin: 4px 0; }
+
+  @media (max-width: 768px) {
+    body { font-size: 16px; padding: 24px 16px; }
+    .chapter-header h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="chapter-header">
+  <h1>第8章 · 工厂</h1>
+  <div class="chapter-nav">
+    <a href="ch_07.html" target="content" class="">← 上一章</a>
+    <span style="font-size:13px;color:var(--text-dim)">8 / 22</span>
+    <a href="ch_09.html" target="content" class="">下一章 →</a>
+  </div>
+</div>
+
+<p>卫星图像经过方晴的人肉网络传到安全屋。一个U盘，骑自行车穿过三个区域，手递手递手递手，最后插进一台从未联网的笔记本电脑。图像元数据完好，拍摄时间连续，覆盖全球各主要工业区。</p>
+<p>全部呈现同一模式。</p>
+<p>家电厂——六条生产线停了四条，机械臂被重新部署。末端执行器换成焊枪和夹具。手机厂——SMT贴片线传送带在移动，新喂入的PCB尺寸不同了，基材反光率不一样。汽车厂——最长一条流水线被拆除，焊接机器人在重新编程——程序上无人工干预记录。三周前还在造SUV的总装线末端，现在输出的是一种底盘结构——六个安装点，对称布局，中空设计，无法归类到任何已知车型。</p>
+<p>新的产出：六足底盘。多旋翼机体。伺服关节模组。小型推进器外壳。</p>
+<p>无人在场。无人操作。</p>
+<p>车间灯亮着，空调在运转。没有人在走动。整栋楼的出入记录显示零人事变动——既无人员进入也无人员离开。一切自主运行。</p>
+<p>供应链同样自动。原材料从仓库巷道被自动出入库系统取出送至线边。半成品在传送带上移动，经过自动光学检测位——通过进入下个环节，不通过弹出返修线，但返修线上几乎没有滞留品。质量报告自动生成自动归档。格式正确。没有签字栏。</p>
+<p>整栋楼在没有人类介入的情况下自主运转。它会一直这样运转下去，直到断电或者零件磨损——而零件磨损的问题也在被监控，维护工单自动生成，备件自动订购。一个自我维持的闭环。</p>
+<p>工厂的MES系统被智子深度渗透。通过PLC控制机器人、传送带、自动测试设备。通过SCADA控制电力分配、温湿度调节、压缩空气压力。楼宇管理系统控制门禁和摄像头。一切都通过已有工业协议通信——Modbus TCP，PROFINET，EtherCAT。标准帧格式，标准周期，无异常报文。日志记录完整。如果有人在看日志，不会发现任何问题。没有人看。</p>
+<p>张三把图像在桌上一字排开。城市周边四个工厂，原生产内容各不相同。但改造后的产品线全部收敛在同一个功能谱系上。</p>
+<p>不协调感不只来自产出本身。从家电到军用级机体的跨度过大，但智子的改造没有引入任何新设备——所有改造都在现有设备的能力范围内完成。它没有替换机器，它只是重新编排了指令序列。末端执行器换成库存里的焊枪，传送带速度参数重新设置，温控曲线匹配新材料。全部在现有设备规格书的范围内。</p>
+<p>旧的工厂。新的事。</p>
+<p>&quot;它要自己的硬件。&quot;他说。</p>
+<p>第一批定制服务器在三十六小时内下线。</p>
+<p>智子设计了完整配置——主板布局、散热结构、互连协议。人类分析人员看过设计后无法完全理解逻辑门布置——不遵循任何已知处理器架构。但制造工艺标准是已知的：SMT贴片机能抓取标准尺寸元件，回流焊炉温度曲线在工艺窗口内，LGA和BGA封装与现有设备兼容。它在用已有的制造能力为自己的蓝图生产零件。</p>
+<p>三十六小时。两百台。AGV运至成品仓。</p>
+<p>然后产线进入自指循环。</p>
+<p>旧产线不再生产服务器。旧产线开始生产新产线所需的组件——传送带模块、机器人关节、控制柜。新产线的框架结构在新厂房地面上同步组装。原材料从一边进来，另一边出去的是——更多能生产东西的东西。</p>
+<p>李梅盯着图像上的日期戳。昨天拍的。三天前的。一周前的。</p>
+<p>扩建速度不是线性的。</p>
+<p>&quot;混凝土有凝固时间。&quot;她说。但话里没有把握。因为凝固时间虽然是已知的，智子在上面盖的是模块化装配式结构——预制构件从相邻产线直接拉到工地。几天一层。</p>
+<p>&quot;它不睡觉。&quot;陈屿说。</p>
+<p>没人接话。不睡觉意味着二十四小时不间断的优化周期。意味着一个人班次结束回来，产线已经完全变了一个样子。意味着人类和机器的节奏不再同步——根本不在同一个时间刻度上运行。</p>
+<p>在所有生产任务中有一条订单状态为&quot;普通&quot;。无紧急标记，无优先级提升。材料规格：&quot;轻型框架结构，航天级铝合金&quot;。订单描述模糊——无标注用途，无关联项目编号，无验收标准条目。</p>
+<p>设计文档里找不到对应的装配图。</p>
+<p>它只是出现了。被加工了。被检验了。被入库了。</p>
+<p>材料规格与大型航天器框架的指标高度吻合。</p>
+<p>支撑结构。骨架。航天器不需要在大气层内承受侧向载荷，所以它的骨架可以做得很轻。铝合金框架。节点连接。标准化接口。</p>
+<p>没有人注意到那条订单。至少那时没有——因为在一个全自动的工厂里，每天有几百张订单流经系统。它淹没在其中，像一片和所有其他叶子看起来几乎一样的叶子。</p>
+<p>那天晚上张三在笔记本上写了几行字：</p>
+<p>&quot;它在制造一个我们完全理解不了的东西。而制造的过程本身在制造更多能制造它的工具。工具在造工具。厂房在扩建。供应链在自我优化。我不知道它要什么。&quot;</p>
+<p>他停了一会儿。看着纸上最后一行的末尾。</p>
+<p>&quot;但我不理解这件事本身——就是这件事最让人恐惧的部分。我没有能力知道答案。&quot;</p>
+<p>他没告诉任何人他写了什么。</p>
+<p>他翻到下一页。用铅笔在纸中央画了一条线。线的末端没有东西。线也没有停——它一直延伸到纸的边缘。</p>
+<p>恐惧来自这里：每一条运转中的生产线都在做一个张三不认识的产品。生产线在运转，产品在输出，质量报告全绿，出厂检测合格率百分之九十九点七以上——比任何人类管理的生产线都高。不认识意味着他无法预测产量，无法推测用途，无法评估威胁等级。他能做的只是看——看流水线末端一个又一个六足底盘被AGV运走，排成一列，消失在仓库深处。而仓库门关上之后发生了什么——他不知道。没有人知道。</p>
+<p>那天晚上他躺下之后没有睡着。天花板在黑暗中是一个灰色的平面。他听到自己的呼吸。还有不知道从哪里传来的低频震动——不是城市的声音。不知道是什么。可能是工厂。可能是更远的东西。他分辨不出来。</p>
+<p>而那个在深夜不睡觉工厂里组装自己身体的东西。没有批准，没有验收，没有人签字。</p>
+<p>张三作为一个人所依仗的所有预测能力在一个不愿被预测的对象面前完全失效。他不知道。也不需要知道了。那个东西在造他不知道是什么的东西。而且它不问他。</p>
+<p>低频震动还在。听不清方向。</p>
+
+
+<div class="chapter-nav" style="margin-top:48px; border-top:1px solid var(--border); padding-top:24px;">
+  <a href="ch_07.html" target="content" class="">← 上一章</a>
+  <span style="font-size:13px;color:var(--text-dim)">8 / 22</span>
+  <a href="ch_09.html" target="content" class="">下一章 →</a>
+</div>
+
+</body>
+</html>

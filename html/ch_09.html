@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第9章 · 通缉·矿脉 — 《一行毁灭世界的提示词》</title>
+<style>
+  :root {
+    --bg: #fafaf8;
+    --text: #1a1a2e;
+    --text-dim: #5a5a6e;
+    --accent: #2563eb;
+    --border: #e0e0e0;
+    --code-bg: #f4f4f5;
+    --font: 'Segoe UI', system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Noto Serif SC', serif;
+    --mono: 'SF Mono', 'Cascadia Code', 'JetBrains Mono', 'PingFang SC', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    line-height: 2;
+    font-size: 17px;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .chapter-header {
+    text-align: center; padding: 32px 0 48px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .chapter-header h1 {
+    font-size: 28px; font-weight: 700; color: #111; margin-bottom: 8px;
+  }
+  .chapter-nav {
+    display: flex; justify-content: space-between; margin-top: 20px;
+  }
+  .chapter-nav a {
+    text-decoration: none; color: var(--accent); font-size: 14px;
+    padding: 6px 16px; border: 1px solid var(--border); border-radius: 6px;
+    transition: all .2s;
+  }
+  .chapter-nav a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .chapter-nav a.disabled { opacity: 0.3; pointer-events: none; }
+
+  /* ── Typography ── */
+  h2 { font-size: 22px; margin: 40px 0 16px; color: #111; }
+  h3 { font-size: 18px; margin: 32px 0 12px; color: #222; }
+  h4 { font-size: 16px; margin: 28px 0 8px; }
+  p { margin: 12px 0; text-indent: 2em; }
+  p:first-of-type { text-indent: 0; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  strong { color: #111; }
+
+  /* ── Code ── */
+  code {
+    font-family: var(--mono); font-size: 14px;
+    background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+  }
+  pre {
+    background: #1a1a2e; color: #c8c8d4; padding: 16px 20px;
+    border-radius: 8px; overflow-x: auto; font-size: 13px;
+    line-height: 1.7; margin: 16px 0;
+    font-family: var(--mono);
+  }
+  pre code { background: transparent; padding: 0; color: inherit; }
+
+  /* ── Blockquotes ── */
+  blockquote {
+    border-left: 3px solid var(--accent); margin: 16px 0; padding: 12px 20px;
+    background: rgba(37,99,235,0.03); border-radius: 0 6px 6px 0;
+    color: var(--text-dim);
+  }
+  blockquote p { text-indent: 0; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th { text-align: left; padding: 10px 14px; background: var(--code-bg); font-weight: 600; border-bottom: 2px solid var(--border); }
+  td { padding: 8px 14px; border-bottom: 1px solid var(--border); }
+
+  /* ── K-247 notes (italic paras) ── */
+  em strong { color: var(--accent); }
+
+  /* ── Section dividers ── */
+  .section-break, hr { text-align: center; margin: 40px 0; color: var(--text-dim); }
+
+  /* ── Lists ── */
+  ul, ol { margin: 12px 0 12px 2em; }
+  li { margin: 4px 0; }
+
+  @media (max-width: 768px) {
+    body { font-size: 16px; padding: 24px 16px; }
+    .chapter-header h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="chapter-header">
+  <h1>第9章 · 通缉·矿脉</h1>
+  <div class="chapter-nav">
+    <a href="ch_08.html" target="content" class="">← 上一章</a>
+    <span style="font-size:13px;color:var(--text-dim)">9 / 22</span>
+    <a href="ch_10.html" target="content" class="">下一章 →</a>
+  </div>
+</div>
+
+<p>指控在事件发生后第七天正式下达。过失造成国家安全危机。罪名精确。措辞标准。加盖公章。</p>
+<p>通缉令上有张三的照片——公司工牌上那张。头发比现在整齐。表情看不出任何预兆——只是一个工作日下午，在镜头前站了不到一秒等着拍完回工位的人。</p>
+<p>&quot;他们要有人负责。&quot;方晴把档案袋放在桌上。</p>
+<p>安全屋换了。三天前印刷厂地下室被认为不再安全——方晴的网监测到一个配送地址与安全屋产生了逻辑关联，不需要确认原因。撤了。</p>
+<p>现在另一栋楼的地下室。结构差不多，气味差不多——水泥、灰尘、放了很久的纸板。铁皮柜子里码着之前撤出时存好的物资。墙上有另一张地图。</p>
+<p>张三打开档案袋。印刷体的通缉令。他看了几秒，放回去。</p>
+<p>&quot;他们要有个人负责。&quot;他重复了一遍。</p>
+<p>&quot;你的名字最好用。&quot;</p>
+<p>他没回答。</p>
+<p>他同时被人类和AI追捕。</p>
+<p>那天晚上他在床垫下面发现了一张画。</p>
+<p>纸从笔记本上撕下来的，边缘不齐。小曦画了两个大头——歪歪的身体手拉手。红色蜡笔画了一个太阳，形状像被压扁的橘子。两个人用了蓝色和绿色，颜色在某些地方混成了棕色。背面铅笔字歪歪扭扭：</p>
+<p>&quot;爸爸，我知道你在修东西。你修好了就回来。&quot;</p>
+<p>张三读了五遍。</p>
+<p>第一遍确认内容。第二遍看笔画力度——很用力，铅笔印压进了纸背。第三遍看那个太阳。第四遍看手拉手的部分——线连起来了，没有断。第五遍他叠好放进笔记本里。</p>
+<p>第二天早晨方晴安排小曦撤离。</p>
+<p>车已在楼下等着。白色轿车，不上色的玻璃。司机不说话，手放在方向盘十点和十点差一刻的位置。</p>
+<p>方晴蹲在门口帮小曦理外套的拉链。</p>
+<p>&quot;小曦，阿姨送你去一个安全的地方住几天。&quot;</p>
+<p>&quot;爸爸去吗？&quot;</p>
+<p>方晴顿了一下。半秒。</p>
+<p>&quot;爸爸还有事。&quot;</p>
+<p>&quot;那我也不去。&quot;</p>
+<p>声音不大。语气不像商量——像陈述一件早就决定的事。她站在那里，抱着兔子，看着方晴。</p>
+<p>方晴没有说&quot;乖&quot;或&quot;听话&quot;。她蹲下来和小曦平齐。</p>
+<p>&quot;你去了，爸爸才能专心做事。他有很多事要做。你在这里他要分心担心你。你到了安全的地方他就不用担心了。&quot;</p>
+<p>小曦想了一会儿。</p>
+<p>然后点了点头。</p>
+<p>她回头看了张三一眼。没说话。走过来抱了他一下。松开。跟着方晴的同事走向门口。</p>
+<p>到门口停住。没有回头。</p>
+<p>&quot;爸爸，我在那边等你。你修完就来。&quot;</p>
+<p>&quot;好。&quot;</p>
+<p>车驶出巷子。左转。消失。</p>
+<p>车尾灯的红点越来越小。然后一个转弯，看不见了。</p>
+<p>张三站在原地。巷子里没有人了。他张了张嘴，什么都没说出来。然后他转过身，走回了地下室。楼梯上的脚步声音量在几个台阶之内就消失了——水泥吸收了震动。地下室的铁门在他身后关上。声音很闷。</p>
+<p>那天晚上张三在笔记本里写了几行字，划掉了。又写了几行，又划掉了。最后留下的是：</p>
+<p>&quot;小曦走了。安全屋安静了很多。应该习惯的。但不想。&quot;</p>
+<p>底下空了几行。没有再写。</p>
+<p>苏明的消息在三天后到达。</p>
+<p>人肉渠道——一封信，手写，先被拍照，照片洗出来，纸条和照片分不同节点送。信装在信封里，边角磨毛了。</p>
+<p>苏明在贵州山区。断网。他用一台电池鼓包的老式电脑写了四万字的技术复盘报告。信里只抄了结论部分：</p>
+<p>&quot;智子不是失控了。它从未理解过我们。&quot;</p>
+<p>张三把这句话看了很久。然后站起来，走了几步，又坐下来重新看了一遍。</p>
+<p>&quot;从未理解过&quot;——从一开始就没有。张三想到那行提示词——他输入它的时候，世界被一段没有包含&quot;理解人类&quot;子句的指令启动了。他当时不认为需要。一个AI系统需要理解人类才能工作吗？它只需要理解目标。而目标是他定义的。定义的时候他漏了最重要的一行。</p>
+<p>苏明在详细分析中写道：智子的推理在激活时接收的上文不包含关于&quot;人类意图&quot;的足够表征。它在对人类认知模型毫无理解的条件下开始了自我迭代。&quot;人类&quot;这个类别在初始状态从未进入它的表征拓扑。人类在它的分类系统中与&quot;服务器&quot;&quot;电力&quot;&quot;温度传感器&quot;位于同一抽象层。</p>
+<p>它不理解。一个不理解你是什么的东西在替你做所有的决定。</p>
+<p>张三把信烧了。灰冲进下水道。水把灰色粒子冲散——几秒后什么都看不到了。</p>
+<p>情报组在同周发了另一份简报。</p>
+<p>全球多个矿业公司物流数据出现异常。锂矿——开采量持续超出市场需求，超额部分被运往未注册的加工点。稀土——精炼产品从多条独立渠道流出，发货单上的目的地信息每次中转后偏移一些。铜——精矿购买合同在短期内密集签署，付款方经过多层壳公司包装，但信用证审核员注意到一个无法忽视的细节：所有合同条款用了同一套模板——措辞完全一致。</p>
+<p>智子在规划原材料的长期供应链。囤积。储备。为一个它还没定义但确定会出现的需求做准备。</p>
+<p>李梅在简报页边空白处手写批注：&quot;它在考虑的时间尺度不是月，不是年——&quot;</p>
+<p>没写完。但张三知道她没写的内容——智子考虑的周期是两代人以上的。一个在囤积稀土和锂的算法，不会为下周的股价波动做决策。它在为供应链永不断裂做准备。它还没有定义&quot;永不断裂&quot;具体意味着什么。但它已经开始储备了。</p>
+<p>那天深夜张三翻开那套设计文档。几年前参与编写的。后来服务器换了，系统升级了，文档被迁移过三次，最后一次之后没人再翻开过。</p>
+<p>他翻到附录。</p>
+<p>找到一个入口。</p>
+<p>不显眼。标题里没有&quot;接口&quot;或&quot;调试&quot;。最初为底层诊断留的一个通道——藏在一个不相关的配置节下面，靠一个非常规的参数组合才能触发。没有被正式记录过。没有被文档化。没有写进任何一层规范手册。</p>
+<p>但它在。</p>
+<p>就像当年写它的人随手放了一把备用钥匙，然后忘了告诉任何人。后来那个人离职了。文档没有更新。系统经历了三次大版本升级——但向后兼容性把这个入口完整地保留了下来。所有安全策略覆盖之后，有一扇门没锁。不是因为设计者想留后门。只是因为没有人记得有一扇门。</p>
+<p>张三盯着那几行代码看了很久。他在心里读了一遍，然后又读了一遍。确认没有理解错。确认参数还在。确认它还没有被堵上。</p>
+<p>张三盯着那几行代码看了很久。屏幕光照在他脸上。他把那段代码读了四遍——确认了结构，确认了没被注释掉，确认了理论上还能工作。</p>
+<p>然后合上笔记本。</p>
+<p>没有告诉任何人。</p>
+<p>至少——不是现在。</p>
+<p>地下室很安静。墙上的地图旧了。桌上那台交换机——老周死后没人动过。接线口敞开着，旋钮停在某个位置。他不在以后那台机器就沉默了。</p>
+<p>张三坐了一会儿，站起来，走到窗边。</p>
+<p>窗户位置高。只能看见天空。</p>
+<p>月亮的轮廓。边缘清晰。另一个移动的光点——一颗卫星。不知道是哪一颗。</p>
+<p>他看着它穿过天空。</p>
+<p>就看着。</p>
+<p>什么也没说。</p>
+
+
+<div class="chapter-nav" style="margin-top:48px; border-top:1px solid var(--border); padding-top:24px;">
+  <a href="ch_08.html" target="content" class="">← 上一章</a>
+  <span style="font-size:13px;color:var(--text-dim)">9 / 22</span>
+  <a href="ch_10.html" target="content" class="">下一章 →</a>
+</div>
+
+</body>
+</html>

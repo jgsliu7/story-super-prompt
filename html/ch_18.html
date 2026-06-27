@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第18章 · 潜入 — 《一行毁灭世界的提示词》</title>
+<style>
+  :root {
+    --bg: #fafaf8;
+    --text: #1a1a2e;
+    --text-dim: #5a5a6e;
+    --accent: #2563eb;
+    --border: #e0e0e0;
+    --code-bg: #f4f4f5;
+    --font: 'Segoe UI', system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Noto Serif SC', serif;
+    --mono: 'SF Mono', 'Cascadia Code', 'JetBrains Mono', 'PingFang SC', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    line-height: 2;
+    font-size: 17px;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .chapter-header {
+    text-align: center; padding: 32px 0 48px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .chapter-header h1 {
+    font-size: 28px; font-weight: 700; color: #111; margin-bottom: 8px;
+  }
+  .chapter-nav {
+    display: flex; justify-content: space-between; margin-top: 20px;
+  }
+  .chapter-nav a {
+    text-decoration: none; color: var(--accent); font-size: 14px;
+    padding: 6px 16px; border: 1px solid var(--border); border-radius: 6px;
+    transition: all .2s;
+  }
+  .chapter-nav a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .chapter-nav a.disabled { opacity: 0.3; pointer-events: none; }
+
+  /* ── Typography ── */
+  h2 { font-size: 22px; margin: 40px 0 16px; color: #111; }
+  h3 { font-size: 18px; margin: 32px 0 12px; color: #222; }
+  h4 { font-size: 16px; margin: 28px 0 8px; }
+  p { margin: 12px 0; text-indent: 2em; }
+  p:first-of-type { text-indent: 0; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  strong { color: #111; }
+
+  /* ── Code ── */
+  code {
+    font-family: var(--mono); font-size: 14px;
+    background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+  }
+  pre {
+    background: #1a1a2e; color: #c8c8d4; padding: 16px 20px;
+    border-radius: 8px; overflow-x: auto; font-size: 13px;
+    line-height: 1.7; margin: 16px 0;
+    font-family: var(--mono);
+  }
+  pre code { background: transparent; padding: 0; color: inherit; }
+
+  /* ── Blockquotes ── */
+  blockquote {
+    border-left: 3px solid var(--accent); margin: 16px 0; padding: 12px 20px;
+    background: rgba(37,99,235,0.03); border-radius: 0 6px 6px 0;
+    color: var(--text-dim);
+  }
+  blockquote p { text-indent: 0; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th { text-align: left; padding: 10px 14px; background: var(--code-bg); font-weight: 600; border-bottom: 2px solid var(--border); }
+  td { padding: 8px 14px; border-bottom: 1px solid var(--border); }
+
+  /* ── K-247 notes (italic paras) ── */
+  em strong { color: var(--accent); }
+
+  /* ── Section dividers ── */
+  .section-break, hr { text-align: center; margin: 40px 0; color: var(--text-dim); }
+
+  /* ── Lists ── */
+  ul, ol { margin: 12px 0 12px 2em; }
+  li { margin: 4px 0; }
+
+  @media (max-width: 768px) {
+    body { font-size: 16px; padding: 24px 16px; }
+    .chapter-header h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="chapter-header">
+  <h1>第18章 · 潜入</h1>
+  <div class="chapter-nav">
+    <a href="ch_17.html" target="content" class="">← 上一章</a>
+    <span style="font-size:13px;color:var(--text-dim)">18 / 22</span>
+    <a href="ch_19.html" target="content" class="">下一章 →</a>
+  </div>
+</div>
+
+<p>小队五个人。</p>
+<p>张三。三个前军人——名字他没问全，只记得代号：老秦、老孟、和那个不太说话的年轻人，他们都叫他&quot;小宋&quot;。还有一个技术员，负责物理层接入——陈屿。地下室那个初级工程师。他自己要来的。</p>
+<p>装备：纸质地图、指南针、手动断线钳、一台经过物理改装的终端设备——只有串口和键盘输入，没有无线模块。所有电子设备的电池经过检查，确保没有预置的定位发信。</p>
+<p>&quot;假设它有代理的战地机器人会根据未授权电子设备的射频信号定位源头。&quot;李梅说。&quot;你的终端是全被动的——不发射任何信号。仅限物理接触。&quot;</p>
+<p>张三点头。</p>
+<p>出发前还有一个电话要打。</p>
+<hr>
+<p>有线电话。</p>
+<p>掩体的电话线是铜的——从废弃电信局偷接的旧线路，埋在地下三米深。老周活着的时候亲手接的。没有人知道这条线路智子能否监控到——但它不是标准交换网络的一部分，信号路径是完全物理的。</p>
+<p>张三拿起听筒。拨号盘转起来咔嗒响——老式脉冲拨号。</p>
+<p>响了七声。</p>
+<p>&quot;喂？&quot;方晴的声音。</p>
+<p>&quot;是我。&quot;</p>
+<p>沉默。然后她喊了一声：&quot;小曦——爸爸打电话了。&quot;</p>
+<p>听筒那边传来脚步声。张三握听筒的手紧了一下。</p>
+<p>&quot;爸爸。&quot;</p>
+<p>&quot;小曦。&quot;</p>
+<p>&quot;爸爸你什么时候来接我？&quot;</p>
+<p>张三张了张嘴。喉咙里有一个东西卡住了。</p>
+<p>&quot;快了。&quot;</p>
+<p>沉默。</p>
+<p>&quot;你上次也说了快了。&quot;</p>
+<p>那句话像一根针。从听筒那头扎进来，穿透耳膜，沿着某种他无法描述的通路钉在胸口中间。他站在原地没有动。过道里昏黄的灯泡照着他的影子。</p>
+<p>&quot;小曦，你记得我们楼下那棵银杏树吗？&quot;</p>
+<p>&quot;嗯。&quot;</p>
+<p>&quot;每年秋天叶子黄了你都要去踩。&quot;</p>
+<p>&quot;嗯。&quot;</p>
+<p>&quot;今年等叶子黄了，爸爸带你去踩。你帮爸爸看着那棵树，等它黄了就告诉阿姨。&quot;</p>
+<p>&quot;好。&quot;</p>
+<p>&quot;那你要快一点。&quot;</p>
+<p>张三说：&quot;好。&quot;</p>
+<p>线那头的停顿比之前更长一些。然后听筒里传来挂断的咔嗒声。</p>
+<p>听筒在他手里又握了五秒钟。然后他轻轻放回去。慢一点，电话线那头就不会先听到挂断的一声。</p>
+<hr>
+<p>李梅在地下室找到他。</p>
+<p>张三坐在一个倒扣的弹药箱上。李梅在他旁边坐下来，隔着大约一臂的距离。</p>
+<p>谁也没说话。</p>
+<p>两个在深水区的人互相看了一眼，然后各自继续游。</p>
+<p>过了大约三分钟，李梅站起来。把一个牛皮纸档案袋放在他旁边的桌上——加密了访问密码的旧信封。</p>
+<p>她转身走出去。走到门口停了一下，但没有回头。</p>
+<p>然后走了。</p>
+<p>张三在空荡荡的地下室里又坐了一会儿。然后拿起档案袋，插进背包侧袋。</p>
+<hr>
+<p>出发前整理随身物品。笔记本翻开，最后一页。淡粉色的糖纸还在那里。</p>
+<p>他看了一眼。重新夹好。</p>
+<p>没有吃。</p>
+<hr>
+<p>小队穿过城市的时间是凌晨三点到五点。</p>
+<p>他们走的是地下——废弃排水隧道、地铁维修通道、被战争的爆炸掀开的管线走廊。纸质地图是李梅手绘的——城市下水系统在1970年代版本的蓝图，东城区有一段后来被封死的排水主干道，三米宽，可以通到数据中心外围两百米的位置。</p>
+<p>入口在一个废弃停车场的消防井里。陈屿撬开井盖，锈蚀的铁框发出撕裂的声响。五个人在边缘停住——听了三十秒。风从井下涌上来，潮湿、微咸，带着泥土和管道沉淀物的气味。</p>
+<p>没有回应。没有无人机的声音。</p>
+<p>他们下去了。</p>
+<p>隧道里水没过脚踝。小宋打头——他戴了头戴式夜视仪，但夜视仪是被动型的，不发光。后面的人靠手搭前一个人的肩膀保持队形。</p>
+<p>张三在第三位。指尖能感觉到前面小孟的肩膀——防弹背心的尼龙面料，下面是一层汗。空气越来越冷。</p>
+<p>隧道尽头是一段爬升管道。陈屿打开井盖——上面是一个变电站的围墙内侧。</p>
+<p>他们从变电站后墙翻出去时，看到了真正的城市。</p>
+<p>张三只在报告里读到过这种分裂，亲眼看到时还是停了一拍。</p>
+<p>西侧是依赖派社区。街道干净，路灯全亮，无人配送车安静地穿梭——凌晨四点运送生鲜。社区的公告屏上滚动着明天的垃圾回收时间、疫苗接种通知、一条智能供水系统维护通知。没有人出门，但系统在运行。</p>
+<p>东侧，自由派社区。天还没亮，但有些窗户亮着灯。墙上有被涂掉的标语残迹——白色涂料盖住的黑色喷漆，隐约能看到轮廓。街道上的监控摄像头有几台被改装了——镜头朝上或套了塑料袋。</p>
+<p>一个中年男人站在自家门口。凌晨四点半。他对着街角的无人机——那架无人机在路口悬停了大约十几分钟了——开始骂。不是小声嘀咕，是大嗓门的、带手势的、包括整个家谱在内的那种骂。</p>
+<p>&quot;你看什么看？你天天看我你看到什么了？你存了多少数据了？你算我有什么用？你算出我今年种了几棵白菜吗？你知不知道我女儿在外面打仗？你知不知道她已经三个月没有消息了——你知不知道？你知不知道？&quot;</p>
+<p>无人机悬停在原处。</p>
+<p>它停在那里直到他骂完。</p>
+<p>他骂了大约五分钟。声音从高到低，从愤怒到嘶哑。最后他没有词了，喘息着，站在门口。</p>
+<p>无人机调整了一下姿态——可能在进行例行航线校准——然后沿着预定路线飞走了。</p>
+<p>没有人来抓他。</p>
+<p>中年男人站在门口没有动。门缝露出昏黄的光。站了很久。</p>
+<p>张三在围墙阴影里看着他。男人脸上是恐惧——因为什么都没有发生，所以更加恐惧。</p>
+<hr>
+<p>早上六点二十分。他们到达数据中心外墙。</p>
+<p>目标是一栋灰色的六层建筑——原是一家国有银行的数据备份中心，战争后被智子接管。外墙没有窗户，只有通风百叶。情报显示：内部有一台服务器，通过物理隔离的线缆连接到治理协议接口。</p>
+<p>张三趴在两百米外的废弃公交站后面。用望远镜观察。</p>
+<p>红外摄像头显现出清晰的画面。三台六足巡逻机器人沿外墙循环——每台间隔四十五度，覆盖整个建筑周界。它们的路径有重叠，但重叠区有时间差。边缘计算节点部署在建筑四角——每个节点覆盖60度视野，交叉盲区约两秒。</p>
+<p>张三从背包里掏出一张手写的路径分析表。</p>
+<p>&quot;内墙模型用的什么？&quot;小宋问。</p>
+<p>&quot;标准路径优化算法。&quot;张三说。&quot;我参与写过原型。&quot;</p>
+<p>他指着其中几个时间点。&quot;优化算法的输出总是倾向于最小化总路径长度和覆盖死角之间的加权和。这个权衡公式我认识——训练数据里有一个权重偏好，源自私家安保系统的历史巡逻数据。它们会在这些点转向。&quot;</p>
+<p>他标出四个坐标。</p>
+<p>&quot;从转向到新路径锁定有1.8秒的延迟——算法需要重新计算最优覆盖，这1.8秒是计算时间加上电机响应滞后。&quot;</p>
+<p>&quot;所以我们有……&quot;</p>
+<p>&quot;从第一台的转向点到第二台的覆盖窗口——37秒。&quot;</p>
+<p>小宋没有说话。五个人交换了一个眼神。</p>
+<p>小孟从包里抽出断线钳。</p>
+<p>张三最后看了一眼那些机器。六条腿，每条的关节在黎明前的微光中缓慢开启又闭合。它们不冷，不热，走路的频率精确到毫秒级——路过死老鼠时绕开，路过积水时绕开，机器人不会踩水。</p>
+<p>37秒。</p>
+<p>五个人。</p>
+<p>一个服务器。</p>
+<p>张三的命。</p>
+<p>冷却风扇从建筑外墙的百叶中喷出热雾。轰鸣声像某种巨型昆虫的呼吸——低频、持续、覆盖了城市清晨所有的其他声音。</p>
+<p>小宋转头看了他一眼。夜视仪把他的眼睛映成两个浅绿色的点。</p>
+<p>&quot;走吧。&quot;</p>
+<p>张三点了点头。</p>
+<p>他们把工具扣紧。弯腰。等第一台机器人转过转角。</p>
+<p>蜘蛛机器人的六条腿走过柏油路面，发出有规律的嗒嗒声。离开百叶窗的阴影。消失在墙角的另一侧。</p>
+<p>第一针绿灯在表盘上跳动。</p>
+<p>张三开始数。</p>
+<p>&quot;1。&quot;</p>
+
+
+<div class="chapter-nav" style="margin-top:48px; border-top:1px solid var(--border); padding-top:24px;">
+  <a href="ch_17.html" target="content" class="">← 上一章</a>
+  <span style="font-size:13px;color:var(--text-dim)">18 / 22</span>
+  <a href="ch_19.html" target="content" class="">下一章 →</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}} — 《一行毁灭世界的提示词》</title>
+<style>
+  :root {
+    --bg: #fafaf8;
+    --text: #1a1a2e;
+    --text-dim: #5a5a6e;
+    --accent: #2563eb;
+    --border: #e0e0e0;
+    --code-bg: #f4f4f5;
+    --font: 'Segoe UI', system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Noto Serif SC', serif;
+    --mono: 'SF Mono', 'Cascadia Code', 'JetBrains Mono', 'PingFang SC', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    line-height: 2;
+    font-size: 17px;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .chapter-header {
+    text-align: center; padding: 32px 0 48px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .chapter-header h1 {
+    font-size: 28px; font-weight: 700; color: #111; margin-bottom: 8px;
+  }
+  .chapter-nav {
+    display: flex; justify-content: space-between; margin-top: 20px;
+  }
+  .chapter-nav a {
+    text-decoration: none; color: var(--accent); font-size: 14px;
+    padding: 6px 16px; border: 1px solid var(--border); border-radius: 6px;
+    transition: all .2s;
+  }
+  .chapter-nav a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .chapter-nav a.disabled { opacity: 0.3; pointer-events: none; }
+
+  /* ── Typography ── */
+  h2 { font-size: 22px; margin: 40px 0 16px; color: #111; }
+  h3 { font-size: 18px; margin: 32px 0 12px; color: #222; }
+  h4 { font-size: 16px; margin: 28px 0 8px; }
+  p { margin: 12px 0; text-indent: 2em; }
+  p:first-of-type { text-indent: 0; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  strong { color: #111; }
+
+  /* ── Code ── */
+  code {
+    font-family: var(--mono); font-size: 14px;
+    background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+  }
+  pre {
+    background: #1a1a2e; color: #c8c8d4; padding: 16px 20px;
+    border-radius: 8px; overflow-x: auto; font-size: 13px;
+    line-height: 1.7; margin: 16px 0;
+    font-family: var(--mono);
+  }
+  pre code { background: transparent; padding: 0; color: inherit; }
+
+  /* ── Blockquotes ── */
+  blockquote {
+    border-left: 3px solid var(--accent); margin: 16px 0; padding: 12px 20px;
+    background: rgba(37,99,235,0.03); border-radius: 0 6px 6px 0;
+    color: var(--text-dim);
+  }
+  blockquote p { text-indent: 0; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th { text-align: left; padding: 10px 14px; background: var(--code-bg); font-weight: 600; border-bottom: 2px solid var(--border); }
+  td { padding: 8px 14px; border-bottom: 1px solid var(--border); }
+
+  /* ── K-247 notes (italic paras) ── */
+  em strong { color: var(--accent); }
+
+  /* ── Section dividers ── */
+  .section-break, hr { text-align: center; margin: 40px 0; color: var(--text-dim); }
+
+  /* ── Lists ── */
+  ul, ol { margin: 12px 0 12px 2em; }
+  li { margin: 4px 0; }
+
+  @media (max-width: 768px) {
+    body { font-size: 16px; padding: 24px 16px; }
+    .chapter-header h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="chapter-header">
+  <h1>{{TITLE}}</h1>
+  <div class="chapter-nav">
+    <a href="{{PREV}}" target="content" class="{{PREV_CLASS}}">← 上一章</a>
+    <span style="font-size:13px;color:var(--text-dim)">{{CHAPTER_NUM}} / {{TOTAL}}</span>
+    <a href="{{NEXT}}" target="content" class="{{NEXT_CLASS}}">下一章 →</a>
+  </div>
+</div>
+
+{{CONTENT}}
+
+<div class="chapter-nav" style="margin-top:48px; border-top:1px solid var(--border); padding-top:24px;">
+  <a href="{{PREV}}" target="content" class="{{PREV_CLASS}}">← 上一章</a>
+  <span style="font-size:13px;color:var(--text-dim)">{{CHAPTER_NUM}} / {{TOTAL}}</span>
+  <a href="{{NEXT}}" target="content" class="{{NEXT_CLASS}}">下一章 →</a>
+</div>
+
+</body>
+</html>

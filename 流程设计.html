@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 辅助小说创作全流程</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #14141f;
+    --surface2: #1a1a2e;
+    --border: #2a2a3e;
+    --text: #c8c8d4;
+    --text-dim: #78788a;
+    --accent: #64b5f6;
+    --accent2: #ef6c6c;
+    --accent3: #81c784;
+    --gold: #ffd54f;
+    --purple: #ce93d8;
+    --radius: 12px;
+    --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    --mono: 'SF Mono', 'Cascadia Code', 'JetBrains Mono', monospace;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  /* ── Header ── */
+  header {
+    position: sticky; top:0; z-index:100;
+    background: rgba(10,10,15,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+  }
+  header .inner {
+    max-width: 1400px; margin:0 auto;
+    display:flex; align-items:center; gap:32px;
+    height:56px; overflow-x:auto;
+  }
+  header .logo { font-weight:700; font-size:18px; white-space:nowrap; color:#fff; }
+  header .logo span { color:var(--accent); }
+  header nav { display:flex; gap:4px; }
+  header nav a {
+    color:var(--text-dim); text-decoration:none;
+    padding:6px 14px; border-radius:8px; font-size:13px;
+    transition: all .2s; white-space:nowrap;
+  }
+  header nav a:hover, header nav a.active { color:#fff; background:var(--surface2); }
+
+  /* ── Main ── */
+  main { max-width:1400px; margin:0 auto; padding:40px 24px 120px; }
+
+  /* ── Hero ── */
+  .hero {
+    text-align:center; padding:60px 20px;
+    background: radial-gradient(ellipse at 50% 0%, rgba(100,180,246,0.08), transparent 60%);
+    border-radius: var(--radius);
+    margin-bottom: 48px;
+  }
+  .hero h1 { font-size:clamp(28px,5vw,48px); color:#fff; margin-bottom:16px; }
+  .hero h1 span { background:linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero p { color:var(--text-dim); font-size:18px; max-width:700px; margin:0 auto; }
+
+  /* ── Section ── */
+  section { margin-bottom:64px; }
+  section h2 {
+    font-size:28px; color:#fff; margin-bottom:8px;
+    display:flex; align-items:center; gap:12px;
+  }
+  section h2 .icon { font-size:32px; }
+  section > p.sub { color:var(--text-dim); font-size:15px; margin-bottom:32px; }
+
+  /* ── Cards ── */
+  .card-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(320px, 1fr)); gap:20px; }
+  .card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); padding:24px;
+    transition: border-color .3s;
+  }
+  .card:hover { border-color:var(--accent); }
+  .card h3 { font-size:17px; color:#fff; margin-bottom:10px; }
+  .card p { color:var(--text-dim); font-size:14px; }
+
+  /* ── Phase Timeline ── */
+  .phase {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); padding:28px 32px; margin-bottom:20px;
+    position:relative;
+  }
+  .phase:hover { border-color:var(--accent); }
+  .phase-header { display:flex; align-items:center; gap:16px; margin-bottom:16px; cursor:pointer; }
+  .phase-num {
+    width:48px; height:48px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    font-weight:700; font-size:20px; flex-shrink:0;
+  }
+  .phase:nth-child(1) .phase-num { background:rgba(100,181,246,.15); color:var(--accent); }
+  .phase:nth-child(2) .phase-num { background:rgba(206,147,216,.15); color:var(--purple); }
+  .phase:nth-child(3) .phase-num { background:rgba(129,199,132,.15); color:var(--accent3); }
+  .phase:nth-child(4) .phase-num { background:rgba(239,108,108,.15); color:var(--accent2); }
+  .phase:nth-child(5) .phase-num { background:rgba(255,213,79,.15); color:var(--gold); }
+  .phase:nth-child(6) .phase-num { background:rgba(100,181,246,.15); color:var(--accent); }
+  .phase:nth-child(7) .phase-num { background:rgba(206,147,216,.15); color:var(--purple); }
+  .phase:nth-child(8) .phase-num { background:rgba(129,199,132,.15); color:var(--accent3); }
+
+  .phase-title { font-size:20px; color:#fff; font-weight:600; }
+  .phase-subtitle { font-size:13px; color:var(--text-dim); }
+  .phase-body { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .phase-col { background:var(--surface2); border-radius:8px; padding:16px; }
+  .phase-col h4 { font-size:13px; color:var(--accent); margin-bottom:8px; text-transform:uppercase; letter-spacing:1px; }
+  .phase-col ul { list-style:none; font-size:14px; }
+  .phase-col ul li { padding:4px 0; padding-left:20px; position:relative; }
+  .phase-col ul li::before { content:'›'; position:absolute; left:4px; color:var(--text-dim); }
+
+  /* ── Randomness Budget ── */
+  .budget-chart {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); padding:32px;
+  }
+  .budget-bar {
+    display:flex; height:48px; border-radius:8px; overflow:hidden;
+    margin:16px 0;
+  }
+  .budget-bar div { display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:600; color:#0a0a0f; }
+  .budget-bar .diverge { background:var(--accent); }
+  .budget-bar .explore { background:var(--purple); }
+  .budget-bar .converge { background:var(--accent3); }
+  .budget-bar .polish   { background:var(--gold); }
+
+  /* ── Tags ── */
+  .tag {
+    display:inline-block; padding:2px 10px; border-radius:6px;
+    font-size:11px; font-weight:600; margin-right:4px;
+  }
+  .tag-red { background:rgba(239,108,108,.15); color:var(--accent2); }
+  .tag-green { background:rgba(129,199,132,.15); color:var(--accent3); }
+  .tag-blue { background:rgba(100,181,246,.15); color:var(--accent); }
+  .tag-purple { background:rgba(206,147,216,.15); color:var(--purple); }
+
+  /* ── Table ── */
+  table { width:100%; border-collapse:collapse; font-size:14px; }
+  th { text-align:left; padding:12px 16px; color:var(--accent); font-size:12px; text-transform:uppercase; letter-spacing:1px; border-bottom:1px solid var(--border); }
+  td { padding:10px 16px; border-bottom:1px solid var(--border); }
+  tr:hover td { background:rgba(255,255,255,.02); }
+
+  /* ── Two-col ── */
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:24px; }
+
+  /* ── Collapsible ── */
+  .collapsible summary {
+    cursor:pointer; font-weight:600; color:#fff; font-size:16px;
+    padding:12px 0; list-style:none;
+  }
+  .collapsible summary::-webkit-details-marker { display:none; }
+  .collapsible summary::before { content:'▸ '; color:var(--accent); transition:transform .2s; display:inline-block; }
+  .collapsible[open] summary::before { content:'▾ '; }
+
+  /* ── Highlight box ── */
+  .hl {
+    background:rgba(100,181,246,.06); border-left:3px solid var(--accent);
+    border-radius:0 8px 8px 0; padding:20px 24px; margin:20px 0;
+  }
+  .hl strong { color:var(--accent); }
+
+  /* ── Flow diagram ── */
+  .flow {
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    justify-content:center; margin:24px 0;
+  }
+  .flow-step {
+    background:var(--surface2); border:1px solid var(--border);
+    border-radius:var(--radius); padding:12px 18px;
+    text-align:center; font-size:13px; color:#fff;
+  }
+  .flow-arrow { color:var(--accent); font-size:20px; }
+
+  /* ── Responsive ── */
+  @media (max-width:768px) {
+    .phase-body, .two-col { grid-template-columns:1fr; }
+    .card-grid { grid-template-columns:1fr; }
+    header .inner { gap:12px; }
+  }
+
+  /* ── Bible Tree ── */
+  .bible-tree {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:var(--radius); padding:24px 32px;
+    font-family:var(--mono); font-size:13px; line-height:2;
+    color:var(--text-dim);
+  }
+  .bible-tree .dir { color:var(--accent); }
+  .bible-tree .file { color:var(--accent3); }
+  .bible-tree .comment { color:var(--text-dim); opacity:0.5; }
+
+  /* ── Pitfall card ── */
+  .pitfall {
+    background:rgba(239,108,108,.04); border:1px solid rgba(239,108,108,.2);
+    border-radius:var(--radius); padding:20px; margin-bottom:12px;
+  }
+  .pitfall h4 { color:var(--accent2); font-size:15px; margin-bottom:6px; }
+  .pitfall p { font-size:14px; color:var(--text-dim); }
+
+  /* ── Footer ── */
+  footer {
+    text-align:center; padding:40px; color:var(--text-dim); font-size:13px;
+    border-top:1px solid var(--border);
+  }
+
+  /* ── Tabs ── */
+  .tabs { display:flex; gap:4px; margin-bottom:24px; flex-wrap:wrap; }
+  .tab-btn {
+    padding:8px 20px; border-radius:8px; border:1px solid var(--border);
+    background:transparent; color:var(--text-dim); cursor:pointer;
+    font-size:14px; transition:all .2s;
+  }
+  .tab-btn:hover { border-color:var(--accent); color:#fff; }
+  .tab-btn.active { background:var(--accent); color:#0a0a0f; border-color:var(--accent); font-weight:600; }
+  .tab-panel { display:none; }
+  .tab-panel.active { display:block; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="inner">
+    <div class="logo">AI<span>×</span>Novel</div>
+    <nav>
+      <a href="#philosophy">核心理念</a>
+      <a href="#pipeline">8 阶段流程</a>
+      <a href="#randomness">随机性系统</a>
+      <a href="#webui">审核界面</a>
+      <a href="#character">人物场景</a>
+      <a href="#plot">情节节奏</a>
+      <a href="#innovation">创新避坑</a>
+      <a href="#quickstart">快速上手</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ═══════════ HERO ═══════════ -->
+<div class="hero">
+  <h1>从创意到小说：<span>AI 辅助创作全流程</span></h1>
+  <p>你不是被 AI 替代的作者，你是指挥 AI 协同创作的导演。本流程告诉你如何用 AI 放大创造力，同时控制随机性、确保一致性。</p>
+</div>
+
+<!-- ═══════════ 核心理念 ═══════════ -->
+<section id="philosophy">
+  <h2><span class="icon">🧠</span> 核心理念</h2>
+
+  <div class="hl">
+    <strong>核心公式：AI 做"多"，人类做"少"。</strong><br>
+    AI 在海量可能性中发散（diverging）——人类在关键节点上收敛（converging）。AI 的时间免费，人类的时间是瓶颈。
+  </div>
+
+  <div class="two-col" style="margin-top:24px;">
+    <div class="card">
+      <h3>🔀 发散（Diverging）</h3>
+      <p>AI 生成 10 个策划方案、20 个人物设定、50 个情节走向。<br><br>
+      利用高 temperature、多 Agent 并行、创意碰撞来最大化可能性空间。<br><br>
+      人类只需浏览、标记、感受。</p>
+    </div>
+    <div class="card">
+      <h3>🎯 收敛（Converging）</h3>
+      <p>人类扮演"创意主编"——从 AI 的产出中选出最佳元素、合并、删减、拍板方向。<br><br>
+      每个阶段结束时，决策结果写回"作品圣经"，成为后续阶段不可动摇的锚点。<br><br>
+      AI 服从圣经，人类拥有圣经。</p>
+    </div>
+  </div>
+
+  <div class="hl" style="border-left-color:var(--accent2); margin-top:24px;">
+    <strong>⛓️ 三不原则（来自实战经验）：</strong><br>
+    ❶ 不要让 AI 做"零到一"的创造——核心创意必须来自人类的真实经验和价值观。<br>
+    ❷ 不要用同一个 AI 实例既写又审——创作和审查必须分离，避免偏好污染。<br>
+    ❸ 不要接受 AI 的第一版输出——永远要求至少三个选项。
+  </div>
+</section>
+
+<!-- ═══════════ 8 阶段流程 ═══════════ -->
+<section id="pipeline">
+  <h2><span class="icon">🏗️</span> 8 阶段创作流程</h2>
+  <p class="sub">从一张白纸到成品小说，每个阶段都有清晰的输入、输出、质量门控和审核方式。前期重规划，后期重执行。</p>
+
+  <div class="phase">
+    <div class="phase-header"><div class="phase-num">0</div><div><div class="phase-title">概念孵化</div><div class="phase-subtitle">1-3 天 · 输出：概念确认书</div></div></div>
+    <div class="phase-body">
+      <div class="phase-col">
+        <h4>发散 — AI 工作</h4>
+        <ul>
+          <li>基于种子想法生成 10 个概念方向</li>
+          <li>为 2-3 个有意思的方向各生成 3 个 logline</li>
+          <li>提出 5 个核心冲突方案</li>
+          <li>对选定概念做"压力测试"（生成 5 个高概念场景检验潜力）</li>
+        </ul>
+      </div>
+      <div class="phase-col">
+        <h4>收敛 — 人类决策</h4>
+        <ul>
+          <li>浏览 10 个方向 → 用"荧光笔法"标记：有感觉/不确定/无感</li>
+          <li>选定 1 个方向 → 写入作品圣经 00_concept.md</li>
+          <li>确认核心冲突是否撑得起 5-10 万字</li>
+          <li><span class="tag tag-red">门控</span> 能否一句话讲给朋友听，对方追问"然后呢？"</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header"><div class="phase-num">1</div><div><div class="phase-title">世界观构建</div><div class="phase-subtitle">2-5 天 · 输出：世界观圣经 + 压力测试报告</div></div></div>
+    <div class="phase-body">
+      <div class="phase-col">
+        <h4>发散 — AI 工作</h4>
+        <ul>
+          <li>生成世界观问卷（10-15 个关键问题）</li>
+          <li>基于人类回答生成 3000+ 字详细设定</li>
+          <li>生成"世界观压力测试题"（10 个边缘案例）</li>
+          <li>强制分级：S级（读者必须知道）/ A级（暗示传递）/ B级（作者知道）/ C级（删掉）</li>
+        </ul>
+      </div>
+      <div class="phase-col">
+        <h4>收敛 — 人类决策</h4>
+        <ul>
+          <li>填写世界观问卷（可在手机上碎片时间完成）</li>
+          <li>审阅设定草案——高亮认同段落，删除不认同</li>
+          <li>检查压力测试答案 → 发现逻辑漏洞则打回修订</li>
+          <li><span class="tag tag-red">门控</span> 内部自洽度 ≥ 90%，最多 1 个压力测试未通过</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header"><div class="phase-num">2</div><div><div><div class="phase-title">人物设计</div><div class="phase-subtitle">3-5 天 · 输出：全员完整档案 + 关系网络 + 对话样本</div></div></div>
+    <div class="phase-body">
+      <div class="phase-col">
+        <h4>发散 — AI 工作</h4>
+        <ul>
+          <li>生成 3 组不同的人物搭配矩阵（主角+对手+导师+盟友）</li>
+          <li>为每个角色生成 10 维度完整档案</li>
+          <li>"角色一致性测试"：5-8 个典型场景 × 每个角色</li>
+          <li>生成对话样本——每个角色就同一话题写独白，检验声音区分度</li>
+        </ul>
+      </div>
+      <div class="phase-col">
+        <h4>收敛 — 人类决策</h4>
+        <ul>
+          <li>选定一组人物搭配</li>
+          <li>逐角色确认——特别检查人物弧线是否与核心概念匹配</li>
+          <li>审阅一致性测试和对话样本（遮住名字能认出是谁？）</li>
+          <li><span class="tag tag-red">门控</span> 每个角色至少有一个内在矛盾（"渴望爱但害怕亲密"）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header"><div class="phase-num">3</div><div><div><div class="phase-title">情节架构</div><div class="phase-subtitle">3-7 天 · 输出：故事总纲 + 节拍表 + 关键场景预览</div></div></div>
+    <div class="phase-body">
+      <div class="phase-col">
+        <h4>发散 — AI 工作</h4>
+        <ul>
+          <li>提出 3 种故事结构方案（三幕式/非线性/平行叙事）</li>
+          <li>生成 15 个节拍点（Save the Cat 框架）</li>
+          <li>每个节拍点提供 2-3 种实现方式</li>
+          <li>生成 3-5 个关键高潮/转折场景的详细描写预览</li>
+          <li>逻辑链推演——逐段追问"为什么角色 X 不选方案 Y？"</li>
+        </ul>
+      </div>
+      <div class="phase-col">
+        <h4>收敛 — 人类决策</h4>
+        <ul>
+          <li>选定叙事结构</li>
+          <li>逐一确认 15 个节拍点——转折点是否有力？</li>
+          <li>审阅关键场景预览：读到这些段落时情绪被调动了吗？</li>
+          <li><span class="tag tag-red">门控</span> 催化事件在前 20% 出现；中段有足够变化支撑</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header"><div class="phase-num">4</div><div><div><div class="phase-title">分章细纲</div><div class="phase-subtitle">3-5 天 · 输出：每章 1-2 页细纲 + 伏笔回收矩阵</div></div></div>
+    <div class="phase-body">
+      <div class="phase-col">
+        <h4>发散 — AI 工作</h4>
+        <ul>
+          <li>将总纲拆为分章方案（每章核心事件 + 字数预期）</li>
+          <li>逐章生成细纲：核心事件/角色心理状态/信息揭露/开头钩子/结尾悬念</li>
+          <li>"平淡检测"——以读者视角对每章提出 5 个尖锐问题</li>
+          <li>伏笔与回收校验——生成对应矩阵表</li>
+        </ul>
+      </div>
+      <div class="phase-col">
+        <h4>收敛 — 人类决策</h4>
+        <ul>
+          <li>调整分章方案（合并/拆分/调序）</li>
+          <li>逐章审阅细纲——每章结尾是否有翻页动力？</li>
+          <li>确认伏笔数量 ≤ 回收数量的 1.5 倍</li>
+          <li><span class="tag tag-red">门控</span> 章节间有因果链（N 章的结果是 N+1 章的原因）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header"><div class="phase-num">5</div><div><div><div class="phase-title">逐章创作</div><div class="phase-subtitle">15-30 天 · 输出：各章节初稿（每章迭代 2-3 稿）</div></div></div>
+    <div class="phase-body">
+      <div class="phase-col">
+        <h4>发散 — AI 工作</h4>
+        <ul>
+          <li>每章生成 3 个版本（不同语气/节奏/切入点）</li>
+          <li>基于人类反馈修订（第 2-3 稿）</li>
+          <li>每章前提供：细纲 + 出场人物档案 + 前两章正文 + 风格锚定规则</li>
+          <li>每 3-4 章做一次"文风一致性检查"</li>
+        </ul>
+      </div>
+      <div class="phase-col">
+        <h4>收敛 — 人类决策</h4>
+        <ul>
+          <li>从 3 个版本中选 1 版 + 从其他版本"划取"可复用段落</li>
+          <li>逐句行校 + 朗读检查节奏</li>
+          <li>每章锁定前确认：角色行为在框架内、有展示非告知、字数偏差 ≤ 30%</li>
+          <li><span class="tag tag-red">门控</span> 每章完成细纲核心事件，无 AI 套路句</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header"><div class="phase-num">6</div><div><div><div class="phase-title">一致性审查</div><div class="phase-subtitle">3-5 天 · 输出：5 份扫描报告 + 修改方案</div></div></div>
+    <div class="phase-body">
+      <div class="phase-col">
+        <h4>发散 — AI 工作</h4>
+        <ul>
+          <li><strong>维度 1：</strong>人物一致性——提取每个角色在所有章节的言行，检测矛盾</li>
+          <li><strong>维度 2：</strong>时间线——提取所有时间标记，构建时间线验证</li>
+          <li><strong>维度 3：</strong>世界观——提取所有"规则"段落，检查有无违反</li>
+          <li><strong>维度 4：</strong>文风——检查语气/句式/词汇波动</li>
+          <li><strong>维度 5：</strong>伏笔回收——确认所有伏笔在正文中都实现了</li>
+          <li>针对每个矛盾生成 2-3 种修改方案</li>
+        </ul>
+      </div>
+      <div class="phase-col">
+        <h4>收敛 — 人类决策</h4>
+        <ul>
+          <li>阅读 5 份报告（非原文！）——标记"确认矛盾/故意差异/需看原文"</li>
+          <li>逐项决策修改方案（改前文/改后文/加解释段落）</li>
+          <li>策略：宁可误报也要全报（低精确率、高召回率）</li>
+          <li><span class="tag tag-red">门控</span> 人物矛盾 ≤ 3 处，时间线矛盾 = 0，世界观违反 = 0</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header"><div class="phase-num">7</div><div><div><div class="phase-title">通读润色</div><div class="phase-subtitle">3-7 天 · 输出：流畅连贯的完整底稿</div></div></div>
+    <div class="phase-body">
+      <div class="phase-col">
+        <h4>发散 — AI 工作</h4>
+        <ul>
+          <li>通读全文生成通读笔记：节奏/描写密度/对话自然度/语言问题</li>
+          <li>标注所有"读起来不顺"的段落</li>
+          <li>检查重复用词（每千字独特词汇比例）、对话占比（建议 40-60%）</li>
+          <li>润色时保留作者原生表达，不覆盖非常规但有个性的写法</li>
+        </ul>
+      </div>
+      <div class="phase-col">
+        <h4>收敛 — 人类决策</h4>
+        <ul>
+          <li>阅读通读笔记（非全文），标记需修改的重点</li>
+          <li>逐批次修改，非一次性全部</li>
+          <li><strong>必须：朗读通读全文</strong>——任何卡住的地方就是问题</li>
+          <li><span class="tag tag-red">门控</span> 朗读无卡顿，无 AI 套路句</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="phase-header"><div class="phase-num">8</div><div><div><div class="phase-title">终审输出</div><div class="phase-subtitle">1-2 天 · 输出：最终成品</div></div></div>
+    <div class="phase-body">
+      <div class="phase-col">
+        <h4>发散 — AI 工作</h4>
+        <ul>
+          <li>标点符号一致性检查（中文标点、引号使用）</li>
+          <li>排版规范检查（段落间距、对话格式）</li>
+          <li>专有名词一致性（人名/地名/术语拼写 100% 一致）</li>
+          <li>字数统计</li>
+        </ul>
+      </div>
+      <div class="phase-col">
+        <h4>收敛 — 人类决策</h4>
+        <ul>
+          <li>最终确认检查清单</li>
+          <li>导出最终格式</li>
+          <li>字数符合初始规划（偏差 ±15%）</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 总览表 -->
+  <h3 style="color:#fff; margin-top:32px;">📊 全流程总览</h3>
+  <div style="overflow-x:auto;">
+    <table>
+      <thead><tr><th>阶段</th><th>天数</th><th>发散输出量</th><th>人类工作量</th><th>一致性保障</th></tr></thead>
+      <tbody>
+        <tr><td>0 概念孵化</td><td>1-3</td><td>10 概念方向</td><td>选 1 个</td><td>圣经建立</td></tr>
+        <tr><td>1 世界观构建</td><td>2-5</td><td>3000+ 字设定</td><td>审阅修订</td><td>圣经更新</td></tr>
+        <tr><td>2 人物设计</td><td>3-5</td><td>每角色详细档案</td><td>逐角色确认</td><td>圣经 + 测试场景</td></tr>
+        <tr><td>3 情节架构</td><td>3-7</td><td>3 种结构方案</td><td>选 1 + 确认节拍</td><td>圣经 + 逻辑推演</td></tr>
+        <tr><td>4 分章细纲</td><td>3-5</td><td>每章 300+ 字细纲</td><td>逐章审阅</td><td>伏笔/回收矩阵</td></tr>
+        <tr><td>5 逐章创作</td><td>15-30</td><td>每章 3 个版本</td><td>选 + 改</td><td>圣经 + 逐章门控</td></tr>
+        <tr><td>6 一致性审查</td><td>3-5</td><td>5 份扫描报告</td><td>审报告非原文</td><td>系统性扫描</td></tr>
+        <tr><td>7 通读润色</td><td>3-7</td><td>通读笔记</td><td>审笔记 + 朗读</td><td>朗读通读</td></tr>
+        <tr><td>8 终审输出</td><td>1-2</td><td>检查清单</td><td>确认</td><td>终稿检查</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ═══════════ 作品圣经 ═══════════ -->
+<section>
+  <h2><span class="icon">📖</span> 作品圣经（The Bible）</h2>
+  <p class="sub">贯穿全流程的"唯一真相源"——一份持续更新的结构化文档。每次 AI 操作前注入圣经相关条目，操作后把决策结果写回。</p>
+
+  <div class="bible-tree">
+<span class="comment"># 作品圣经目录结构</span>
+<span class="dir">novel_bible/</span>
+<span class="dir">├── 00_concept.md</span>          <span class="comment"># 一句话梗概、核心情绪、目标读者</span>
+<span class="dir">├── 01_world.md</span>            <span class="comment"># 世界观设定、社会结构、规则系统</span>
+<span class="dir">├── 02_characters/</span>         <span class="comment"># 每个人物一个文件</span>
+<span class="dir">│   ├── protagonist.md</span>
+<span class="dir">│   ├── antagonist.md</span>
+<span class="dir">│   └── supporting/</span>
+<span class="dir">├── 03_timeline.md</span>         <span class="comment"># 世界时间线 + 故事时间线</span>
+<span class="dir">├── 04_outline.md</span>          <span class="comment"># 总纲 + 分章梗概</span>
+<span class="dir">├── 05_style_guide.md</span>      <span class="comment"># 文风指南（词汇、句式、语气参考）</span>
+<span class="dir">├── 06_chapters/</span>           <span class="comment"># 逐章正文</span>
+<span class="dir">├── 07_continuity_log.md</span>   <span class="comment"># 连续性检查记录</span>
+<span class="dir">├── 08_history.md</span>          <span class="comment"># 所有重大决策的审计日志</span>
+<span class="dir">└── _templates/</span>            <span class="comment"># 各阶段提示词模板</span>
+  </div>
+
+  <div class="hl" style="margin-top:16px;">
+    <strong>为什么用纯文本文件？</strong> 可被 AI 直接读取、可被 Git 做版本管理、可被人用任何编辑器修改、可全局搜索替换。不是数据库，胜似数据库。
+  </div>
+</section>
+
+<!-- ═══════════ 随机性系统 ═══════════ -->
+<section id="randomness">
+  <h2><span class="icon">🎲</span> 随机性控制与利用系统</h2>
+  <p class="sub">核心创新：将 temperature 视为一种可管理的"预算"资源——早期充裕，后期稀缺。</p>
+
+  <div class="budget-chart">
+    <h3 style="color:#fff; margin-bottom:8px;">📈 随机性预算曲线</h3>
+    <p style="color:var(--text-dim); margin-bottom:16px;">R(t) = R₀ × (1 - t/T)^α &nbsp;&nbsp;·&nbsp;&nbsp; α 越大衰减越快（建议 0.8）</p>
+
+    <div class="budget-bar">
+      <div class="diverge" style="width:28%">阶段一 发散<br>temp=0.8~1.0</div>
+      <div class="explore" style="width:25%">阶段二 探索<br>temp=0.4~0.7</div>
+      <div class="converge" style="width:30%">阶段三 收敛<br>temp=0.2~0.4</div>
+      <div class="polish" style="width:17%">阶段四 打磨<br>temp=0.05~0.15</div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:20px;">
+      <div style="background:var(--surface2); padding:14px; border-radius:8px;">
+        <span class="tag tag-blue">发散</span>
+        <p style="font-size:13px; margin-top:6px;">高 temp + 视角扰动<br>变量替换、风格迁移<br>10 个方向 × 3 个变体</p>
+      </div>
+      <div style="background:var(--surface2); padding:14px; border-radius:8px;">
+        <span class="tag tag-purple">探索</span>
+        <p style="font-size:13px; margin-top:6px;">多角色创意碰撞<br>跨版本基因重组<br>渐进式锁定窗口</p>
+      </div>
+      <div style="background:var(--surface2); padding:14px; border-radius:8px;">
+        <span class="tag tag-green">收敛</span>
+        <p style="font-size:13px; margin-top:6px;">低 temp 展开叙事<br>栅栏式约束注入<br>每章 3 版 → 选 1</p>
+      </div>
+      <div style="background:var(--surface2); padding:14px; border-radius:8px;">
+        <span class="tag tag-red">打磨</span>
+        <p style="font-size:13px; margin-top:6px;">极低 temp 润色<br>逐段一致性验证<br>AI 套话专项清除</p>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="color:#fff; margin-top:32px;">🔧 控制随机性的五大手段</h3>
+  <div class="card-grid">
+    <div class="card">
+      <h3>1. 层级化 Temperature</h3>
+      <p>不同内容层级用不同温度：<br>
+      <span class="tag tag-blue">L0 情节主干</span> temp=0.15<br>
+      <span class="tag tag-purple">L1 对话/行为</span> temp=0.4<br>
+      <span class="tag tag-green">L2 描写/环境</span> temp=0.7</p>
+    </div>
+    <div class="card">
+      <h3>2. 栅栏式约束</h3>
+      <p>用 [ANCHOR]…[/ANCHOR] 标记硬约束（不可违背），[FREE]…[/FREE] 标记软约束（自由发挥）。AI 能清晰识别边界，不会在关键处跑偏。</p>
+    </div>
+    <div class="card">
+      <h3>3. 正反例对比 Prompt</h3>
+      <p>同时提供 [GOOD] 和 [BAD] 样本。比单纯说"写得有文采"有效得多——AI 通过对比学习风格边界。</p>
+    </div>
+    <div class="card">
+      <h3>4. 递进式多轮筛选</h3>
+      <p>第一轮评"创意性"淘汰 50% → 第二轮评"一致性"保留 2-3 → 第三轮低 temp 打磨。每轮评分标准不同。</p>
+    </div>
+    <div class="card">
+      <h3>5. 渐进式锁定</h3>
+      <p>把长篇分成若干窗口。前一个窗口输出 = 下一个窗口的固定锚点。窗口大小逐渐缩小——早期大（探索空间大），后期小（强制收敛）。</p>
+    </div>
+  </div>
+
+  <h3 style="color:#fff; margin-top:32px;">💥 利用随机性的创新手段</h3>
+  <div class="card-grid">
+    <div class="card">
+      <h3>结构化扰动</h3>
+      <p>故意注入有方向的扰动：视角扰动（同一场景 A/B/上帝视角各写一次）、变量替换（男女互换/日夜互换/动机互换）、风格迁移（海明威风→村上风→刘慈欣风）。这能暴露你故事中的隐式假设。</p>
+    </div>
+    <div class="card">
+      <h3>跨版本基因工程</h3>
+      <p>从 5 个版本中做段落级评分 → 从版本 A 取"最优开头"、B 取"最佳对话"、C 取"最佳转折" → 低 temp 重组为连贯版本。借鉴遗传算法中的交叉操作。</p>
+    </div>
+    <div class="card">
+      <h3>多 AI 创意碰撞工作室</h3>
+      <p>5 个 AI 角色：<strong>主创</strong>(temp=0.3)·<strong>灵感者</strong>(temp=0.9)·<strong>批评家</strong>(temp=0.2)·<strong>风格师</strong>(temp=0.5)·<strong>读者代表</strong>(temp=0.4)。灵感者提疯狂点子，批评家找漏洞，主创综合决策。</p>
+    </div>
+    <div class="card">
+      <h3>梦境式生成</h3>
+      <p>先以极高 temp(1.0+) 生成完全自由的"梦境"文本 → 另一个 AI 从中提取意象/隐喻/灵感 → 低 temp 整合进创作。模拟人类从梦境获取灵感的过程。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 审核界面 ═══════════ -->
+<section id="webui">
+  <h2><span class="icon">🖥️</span> Web 审核与决策界面</h2>
+  <p class="sub">当 AI 产出大量内容时（10 个方案、20 个人物档案、50 个场景），人类需要高效筛选而非全文阅读。界面设计的核心使命：让审核决策最小化认知负担。</p>
+
+  <div class="tabs" id="uiTabs">
+    <button class="tab-btn active" onclick="switchTab('ui-compare', this)">方案对比页</button>
+    <button class="tab-btn" onclick="switchTab('ui-char', this)">人物管理页</button>
+    <button class="tab-btn" onclick="switchTab('ui-scene', this)">章节审核页</button>
+    <button class="tab-btn" onclick="switchTab('ui-check', this)">一致性面板</button>
+  </div>
+
+  <div id="ui-compare" class="tab-panel active">
+    <div class="two-col">
+      <div>
+        <h3 style="color:#fff;">📋 策划方案对比</h3>
+        <p style="font-size:14px; color:var(--text-dim); margin:12px 0;">
+          水平卡片式排列，左侧纵向维度列表固定。<br>
+          悬停维度标题 → 所有方案该维度高亮。<br>
+          点击维度 → 展开详细对比行（类似 Excel）。
+        </p>
+        <p style="font-size:14px; color:var(--text-dim);">
+          内置 <strong>⭐ 星级评分</strong> + <strong>雷达图</strong> + <strong>批注系统</strong>（👍赞成/🤔疑问/⚠️风险）。<br>
+          未被选中的方案折叠为"备选库"，供后续灵感挖掘。
+        </p>
+      </div>
+      <div style="background:var(--surface2); border-radius:var(--radius); padding:16px; font-family:var(--mono); font-size:12px; color:var(--text-dim); overflow-x:auto;">
+<pre>┌──────────┬──────────┬──────────┬──────────┐
+│ 对比维度   │ 方案 A    │ 方案 B    │ 方案 C    │
+├──────────┼──────────┼──────────┼──────────┤
+│ 结局方向   │ 黑暗灭绝  │ 温暖共存  │ 悬停悖论  │
+│ 叙事结构   │ 线性史诗  │ 双线交织  │ 三种语体  │
+│ 核心主题   │ AI对齐   │ 人机共生  │ 哥德尔困境│
+│ 视角选择   │ 第三人称  │ 多POV    │ 第二人称  │
+│ 基调风格   │ 冷峻诗意  │ 技术质感  │ 哲学实验  │
+└──────────┴──────────┴──────────┴──────────┘</pre>
+      </div>
+    </div>
+  </div>
+
+  <div id="ui-char" class="tab-panel">
+    <div class="two-col">
+      <div>
+        <h3 style="color:#fff;">🧑‍🤝‍🧑 人物关系图谱</h3>
+        <p style="font-size:14px; color:var(--text-dim); margin:12px 0;">
+          力导向图展示人物关系——节点大小 = 出场重要性，连线粗细 = 关系强度，颜色 = 关系类型。<br><br>
+          交互：拖拽/缩放/双击聚焦/时间滑块查看不同阶段的关系变化。<br><br>
+          点击节点 → 右侧展开完整 10 维度档案。<br>
+          性格用 <strong>五维雷达图</strong> 可视化。
+        </p>
+      </div>
+      <div style="background:var(--surface2); border-radius:var(--radius); padding:16px; font-size:13px;">
+        <h4 style="color:var(--accent);">⚠️ 不一致自动检测</h4>
+        <div style="background:rgba(239,108,108,.08); border:1px solid rgba(239,108,108,.2); border-radius:8px; padding:12px; margin:8px 0;">
+          <strong style="color:var(--accent2);">❶ 外貌矛盾</strong><br>
+          第3章："琥珀色的眼睛" vs 第12章："深棕色的眸子"<br>
+          <span style="color:var(--accent);">[定位]</span> <span style="color:var(--accent3);">[统一为"琥珀色"]</span> <span style="color:var(--text-dim);">[忽略]</span>
+        </div>
+        <div style="background:rgba(239,108,108,.08); border:1px solid rgba(239,108,108,.2); border-radius:8px; padding:12px; margin:8px 0;">
+          <strong style="color:var(--accent2);">❷ 年龄矛盾</strong><br>
+          设定29岁 vs 第8章回忆隐含27岁<br>
+          <span style="color:var(--accent);">[定位]</span> <span style="color:var(--accent3);">[自动修正]</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="ui-scene" class="tab-panel">
+    <div class="two-col">
+      <div>
+        <h3 style="color:#fff;">🎬 章节大纲审核</h3>
+        <p style="font-size:14px; color:var(--text-dim); margin:12px 0;">
+          <strong>三种视图：</strong>鸟瞰（热力图）· 时间线（Sankey图）· 列表（传统大纲）<br><br>
+          每一章卡片显示：核心事件 + 情感标签 + 紧张度(1-10)。<br>
+          颜色编码——暖色=紧张、冷色=平静、灰色=过渡。<br><br>
+          节奏分析面板自动预警：连续紧张/节奏陡降/缺少释放点。
+        </p>
+      </div>
+      <div style="background:var(--surface2); border-radius:var(--radius); padding:16px; font-size:13px;">
+        <h4 style="color:var(--accent2);">🔴 节奏问题 (3 个)</h4>
+        <p>❶ 第4-6章连续高紧张 (9→8→9)<br><span style="color:var(--text-dim);">建议：在第5章后插入缓冲场景</span></p>
+        <p>❷ 第8章节奏陡降 (9→2)<br><span style="color:var(--text-dim);">建议：增加过渡段落</span></p>
+        <p>❸ Ch10 后缺少情感释放点</p>
+        <h4 style="color:var(--accent3); margin-top:12px;">🟢 节奏亮点</h4>
+        <p>第2-3章建置期张力梯度设计合理</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="ui-check" class="tab-panel">
+    <div class="two-col">
+      <div>
+        <h3 style="color:#fff;">🔍 一致性检查面板</h3>
+        <p style="font-size:14px; color:var(--text-dim); margin:12px 0;">
+          全局浮层，可从任何页面唤出。小红点标记未处理数量。<br><br>
+          按严重度分组：<span class="tag tag-red">严重</span> <span class="tag tag-purple">轻微</span> <span class="tag tag-green">已处理</span><br><br>
+          每条提供 <strong>一键修复</strong>（diff 预览 + 确认替换 + 可回滚）。<br>
+          右侧 AI 建议窗自动生成最佳修复方案。
+        </p>
+      </div>
+      <div style="background:var(--surface2); border-radius:var(--radius); padding:16px; font-size:13px;">
+        <h4 style="color:#fff;">检查类别</h4>
+        <table style="font-size:12px;">
+          <tr><td>人物属性冲突</td><td><span class="tag tag-red">严重</span></td><td>3 项</td></tr>
+          <tr><td>时间线矛盾</td><td><span class="tag tag-red">严重</span></td><td>0 项 ✓</td></tr>
+          <tr><td>物品连续性</td><td><span class="tag tag-purple">轻微</span></td><td>2 项</td></tr>
+          <tr><td>地点一致性</td><td><span class="tag tag-green">通过</span></td><td>0 项 ✓</td></tr>
+          <tr><td>人物称谓</td><td><span class="tag tag-purple">轻微</span></td><td>5 项</td></tr>
+          <tr><td>人名拼写</td><td><span class="tag tag-green">通过</span></td><td>0 项 ✓</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="hl" style="margin-top:24px;">
+    <strong>核心设计哲学：</strong>AI 负责量（生成大量内容），人类负责质（做决策和判断）。界面的使命不是展示 AI 有多强，而是让人类的审核决策尽可能高效、有依据、低认知负担。
+  </div>
+</section>
+
+<!-- ═══════════ 人物与场景 ═══════════ -->
+<section id="character">
+  <h2><span class="icon">👥</span> 人物与场景构建体系</h2>
+  <p class="sub">"我们要像拍电影一样，把演员表和布景在开拍前全部确定。"——用四层推导法从故事需求反推人物，用六维模板固化场景。</p>
+
+  <div class="two-col">
+    <div>
+      <h3 style="color:#fff;">🎭 人物 10 维度档案</h3>
+      <table style="font-size:13px;">
+        <tr><td><strong>1. 基本信息</strong></td><td>姓名/年龄/职业/出生地</td></tr>
+        <tr><td><strong>2. 外貌特征</strong></td><td>体态/面容/穿衣风格/标志性细节</td></tr>
+        <tr><td><strong>3. 性格光谱</strong></td><td>大五人格简化版 + 压力反应模式</td></tr>
+        <tr><td><strong>4. 背景故事</strong></td><td>童年关键事件/塑造性创伤</td></tr>
+        <tr><td><strong>5. 核心动机</strong></td><td>表层欲望 vs 深层需求 vs 恐惧</td></tr>
+        <tr><td><strong>6. 成长弧线</strong></td><td>A→Z 的完整变化路径</td></tr>
+        <tr><td><strong>7. 语言风格</strong></td><td>口癖/语速/用词偏好/沉默模式</td></tr>
+        <tr><td><strong>8. 习惯动作</strong></td><td>紧张/放松/思考/愤怒时的肢体语言</td></tr>
+        <tr><td><strong>9. 秘密/弱点</strong></td><td>分 A/B/C 三级，逐级揭露</td></tr>
+        <tr><td><strong>10. 关系网络</strong></td><td>与每个人的关系定位 + 情感基线(1-10)</td></tr>
+      </table>
+    </div>
+    <div>
+      <h3 style="color:#fff;">🏙️ 场景 6 维度档案</h3>
+      <table style="font-size:13px;">
+        <tr><td><strong>S1. 空间布局</strong></td><td>平面逻辑/方位/人物移动路径</td></tr>
+        <tr><td><strong>S2. 视觉氛围</strong></td><td>光线/色彩/天气/3-5个视觉关键词</td></tr>
+        <tr><td><strong>S3. 声音气味</strong></td><td>环境声/背景音/特定气味及叙事作用</td></tr>
+        <tr><td><strong>S4. 时间特征</strong></td><td>具体时间+时代细节+持续时长</td></tr>
+        <tr><td><strong>S5. 社会属性</strong></td><td>空间归属/权力关系/社会隐喻</td></tr>
+        <tr><td><strong>S6. 故事关联</strong></td><td>为什么必须存在？删除测试答案</td></tr>
+      </table>
+      <div class="hl" style="margin-top:16px;">
+        <strong>删除测试：</strong>每个场景在确定前问——"删掉它，故事怎样？"<br>
+        A. "情节接不上" ✓ B. "人物转变没依据" ✓<br>
+        C. "情绪基调断了" → 补充必要性 D. "没影响" → 删掉
+      </div>
+    </div>
+  </div>
+
+  <h3 style="color:#fff; margin-top:32px;">🔒 风格锚定机制</h3>
+  <p style="font-size:14px; color:var(--text-dim);">解决 AI 写作"风格漂移"的核心方案。选定一段 300-800 字的人类写的风格样本 → AI 提取风格规则（句式节奏/描写策略/用词偏好/标点习惯）→ 每次生成时注入为硬约束 → 每 5 章做一次风格校准。</p>
+
+  <div class="hl">
+    <strong>一致性三道防线：</strong><br>
+    <span class="tag tag-blue">第一道（事前）</span> 作品圣经作为每次 AI 操作的 system prompt<br>
+    <span class="tag tag-purple">第二道（事中）</span> 每章完成时自动检查角色行为、时间、地点、世界观规则<br>
+    <span class="tag tag-red">第三道（事后）</span> 全书完成后做 5 维度系统性扫描
+  </div>
+</section>
+
+<!-- ═══════════ 情节节奏 ═══════════ -->
+<section id="plot">
+  <h2><span class="icon">📐</span> 情节架构与节奏控制</h2>
+  <p class="sub">用工程化的方法管理故事结构——让每一章都有"非读不可"的理由。</p>
+
+  <div class="two-col">
+    <div>
+      <h3 style="color:#fff;">🔩 节拍表框架 (15 个节拍点)</h3>
+      <table style="font-size:13px;">
+        <tr><td>1. 开场画面</td><td>6. 游戏时间</td><td>11. 一切尽失</td></tr>
+        <tr><td>2. 主题陈述</td><td>7. 中点转折</td><td>12. 灵魂暗夜</td></tr>
+        <tr><td>3. 日常世界</td><td>8. 反派逼近</td><td>13. 第三幕转折</td></tr>
+        <tr><td>4. 催化事件</td><td>9. 一败涂地</td><td>14. 高潮决战</td></tr>
+        <tr><td>5. 犹豫/拒绝</td><td>10. 灵魂暗夜前</td><td>15. 终场画面</td></tr>
+      </table>
+      <p style="font-size:13px; color:var(--text-dim); margin-top:8px;">
+        每个节拍点 AI 提供 2-3 种实现方式。<br>
+        人类为每个节拍选择方向 → 形成完整骨架。
+      </p>
+    </div>
+    <div>
+      <h3 style="color:#fff;">📊 节奏五维分析</h3>
+      <table style="font-size:13px;">
+        <tr><td><strong>强度等级</strong></td><td>Lv1(舒缓) 到 Lv5(爆炸)</td></tr>
+        <tr><td><strong>对话占比</strong></td><td>建议 40-60%，过高拖沓过低沉闷</td></tr>
+        <tr><td><strong>描写密度</strong></td><td>每千字感官细节数量</td></tr>
+        <tr><td><strong>事件密度</strong></td><td>每章的情节推进点数</td></tr>
+        <tr><td><strong>情感复杂度</strong></td><td>单情绪 vs 混合情绪</td></tr>
+      </table>
+      <p style="font-size:13px; color:var(--text-dim); margin-top:8px;">
+        AI 自动检测：连续 3 章高强度 → 预警<br>
+        节奏陡降(差>5级) → 建议加过渡场景<br>
+        情感释放点缺失 → 标记
+      </p>
+    </div>
+  </div>
+
+  <h3 style="color:#fff; margin-top:24px;">🔗 伏笔管理系统</h3>
+  <div class="card-grid">
+    <div class="card">
+      <h3>四分类编号法</h3>
+      <p>F-核心（必须回收的主线伏笔）、S-次要（支线伏笔）、A-氛围（意象/象征线索）、R-冗余（故意不回收，留给读者想象的）。每类独立编号追踪。</p>
+    </div>
+    <div class="card">
+      <h3>伏笔回收矩阵</h3>
+      <p>用表格管理：伏笔编号 → 埋设章节 → 埋设方式 → 回收章节 → 回收方式 → 间隔章节数。间隔建议：小伏笔 3-5 章，大伏笔 5-15 章。</p>
+    </div>
+    <div class="card">
+      <h3>AI 自动校验</h3>
+      <p>全书完成后 AI 扫描所有伏笔 → 输出"已回收/未回收/回收过于明显/埋设后从未出现"四类标注 → 人类确认处理方式。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 创新与避坑 ═══════════ -->
+<section id="innovation">
+  <h2><span class="icon">💡</span> 创新突破 + 避坑指南</h2>
+
+  <h3 style="color:#fff;">🚀 四种创新协作模式</h3>
+  <div class="card-grid">
+    <div class="card">
+      <h3>魔鬼代言人</h3>
+      <p>独立 AI 实例专门挑刺——逻辑漏洞、动机薄弱、世界观违反。只找问题不给方案，人类保留修改方向的主动权。<br><span class="tag tag-red">关键</span> 不能用同一个上下文既写又审。</p>
+    </div>
+    <div class="card">
+      <h3>读者模拟器</h3>
+      <p>AI 按不同读者类型模拟阅读反应：快读者（只抓主干）、慢读者（关注细节）、类型偏好者。生成"情感热力图"和"理解偏差报告"。每章结束时输出"读者此刻最关心的 3 个问题"。</p>
+    </div>
+    <div class="card">
+      <h3>多 AI 人格辩论</h3>
+      <p>商业人格（关注节奏爽点）· 文学人格（关注语言意象）· 实验人格（关注形式创新）· 编辑人格（关注冗余平衡）。你作为"主编"听取辩论后拍板。</p>
+    </div>
+    <div class="card">
+      <h3>逆大纲写作</h3>
+      <p>先让 AI 写一个"你绝对不会采用的极端版本"→ 从中提取意外的好点子 → 回注到正式大纲的"备选路径"。大纲只定起点+终点+3个转折点，中间 20% 留给写的时候探索。</p>
+    </div>
+  </div>
+
+  <h3 style="color:#fff; margin-top:32px;">⚠️ 六大常见陷阱</h3>
+  <div class="pitfall"><h4>1. "AI味"过重</h4><p>症状：句式过于工整、过渡过于平滑、描述过于均衡、对话过于"合理"。修复：手动打断节奏——插入 3-4 词短句或 5 行破折号插入句；让角色答非所问、说车轱辘话。每章保留至少 200 字纯人类写的"指纹段落"。</p></div>
+  <div class="pitfall"><h4>2. 大纲过细 → 写作变成填字游戏</h4><p>大纲只定起点、终点和 3 个转折点。为每个转折点生成 10 种到达方式，选最不寻常的一条。预留 20% 的"弹性节点"——写到时临时决定。</p></div>
+  <div class="pitfall"><h4>3. 人类把关疲劳</h4><p>每个阶段审阅量严格控制。使用"荧光笔原则"——不要求读完并记住，只要求标记不认同的。两天内不过量审阅（≤2小时/天）。</p></div>
+  <div class="pitfall"><h4>4. 虚假一致——AI 说"检查过了没问题"</h4><p>让 AI 输出证据而非结论。使用双 AI 交叉校验——两个独立实例分别扫描，对比分歧。策略：宁可误报也要全报（高召回率）。</p></div>
+  <div class="pitfall"><h4>5. 故事同质化</h4><p>每次生成附带"极端约束"（本章只能用单音节词/场景始终不离开一个电话亭/主角本章不说话）。为每个项目设定"绝对不出现的 10 个桥段"。用骰子决定关键情节走向。</p></div>
+  <div class="pitfall"><h4>6. 人物沦为功能棋子</h4><p>检查每个人物是否有至少一条与人设功能无关的独立故事线。给边缘人物写完整前史（仅作者可见）。情节转折时做"角色决策回溯测试"：以这个角色的性格，TA 真的会这么做吗？</p></div>
+</section>
+
+<!-- ═══════════ 快速上手 ═══════════ -->
+<section id="quickstart">
+  <h2><span class="icon">⚡</span> 最小可行流程</h2>
+  <p class="sub">如果你想明天就开始，这是最简洁且最难出错的流程模板：</p>
+
+  <div class="flow" style="display:flex; flex-direction:column; align-items:flex-start; gap:12px; max-width:700px; margin:0 auto;">
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div style="background:var(--accent); color:#0a0a0f; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">1</div>
+      <span>人类写 <strong>500 字核心场景</strong>——脑中闪过的任何画面/对话/情绪片段</span>
+    </div>
+    <div style="color:var(--text-dim); padding-left:44px;">↓</div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div style="background:var(--purple); color:#0a0a0f; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">2</div>
+      <span>AI 生成 <strong>10 个"如果……会怎样"</strong>（只出方向，不写正文）</span>
+    </div>
+    <div style="color:var(--text-dim); padding-left:44px;">↓</div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div style="background:var(--accent3); color:#0a0a0f; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">3</div>
+      <span>人类选出最有感觉的 <strong>3 个方向</strong>，为每个写 200 字扩展</span>
+    </div>
+    <div style="color:var(--text-dim); padding-left:44px;">↓</div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div style="background:var(--accent2); color:#fff; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">4</div>
+      <span>AI 为每个方向指出 <strong>可能的矛盾点</strong>（叙事困难，而非给方案）</span>
+    </div>
+    <div style="color:var(--text-dim); padding-left:44px;">↓</div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div style="background:var(--gold); color:#0a0a0f; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">5</div>
+      <span>人类敲定方向，写大纲（<strong>只有 3 个关键节点</strong>：起点·转折·终点）</span>
+    </div>
+    <div style="color:var(--text-dim); padding-left:44px;">↓</div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div style="background:var(--accent); color:#0a0a0f; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">6</div>
+      <span>AI 为每个节点生成 <strong>5 种到达方式</strong></span>
+    </div>
+    <div style="color:var(--text-dim); padding-left:44px;">↓</div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div style="background:var(--purple); color:#0a0a0f; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">7</div>
+      <span>人类选一种，<strong>开始写正文</strong></span>
+    </div>
+    <div style="color:var(--text-dim); padding-left:44px;">↓</div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div style="background:var(--accent3); color:#0a0a0f; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">8</div>
+      <span>每写完一章，AI 跑一次 <strong>"魔鬼代言人" + "读者模拟"</strong></span>
+    </div>
+    <div style="color:var(--text-dim); padding-left:44px;">↓</div>
+    <div style="display:flex; align-items:center; gap:12px;">
+      <div style="background:var(--accent2); color:#fff; width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700;">9</div>
+      <span>人类根据反馈修改 → 继续下一章 → <strong>循环往复</strong></span>
+    </div>
+  </div>
+
+  <div class="hl" style="margin-top:32px; text-align:center;">
+    <strong>核心原则：</strong>每个步骤人类都在主动创造和决策，AI 始终在提供原材料和反馈信号。<br>
+    不是用 AI 的产出当成品，而是把 AI 的产出当<strong>激发你做出更好作品的催化剂</strong>。
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>AI 辅助小说创作全流程设计 &nbsp;·&nbsp; 由 6 个专项 Agent 协同设计 &nbsp;·&nbsp; 2026</p>
+  <p style="margin-top:4px;">核心理念：AI 做"多"（发散），人类做"少"（收敛）。人类的时间是瓶颈，AI 的时间是免费的。</p>
+</footer>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('#uiTabs .tab-btn').forEach(b => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+</script>
+</body>
+</html>

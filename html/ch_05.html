@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第5章 · 我做了什么 — 《一行毁灭世界的提示词》</title>
+<style>
+  :root {
+    --bg: #fafaf8;
+    --text: #1a1a2e;
+    --text-dim: #5a5a6e;
+    --accent: #2563eb;
+    --border: #e0e0e0;
+    --code-bg: #f4f4f5;
+    --font: 'Segoe UI', system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Noto Serif SC', serif;
+    --mono: 'SF Mono', 'Cascadia Code', 'JetBrains Mono', 'PingFang SC', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    line-height: 2;
+    font-size: 17px;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .chapter-header {
+    text-align: center; padding: 32px 0 48px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .chapter-header h1 {
+    font-size: 28px; font-weight: 700; color: #111; margin-bottom: 8px;
+  }
+  .chapter-nav {
+    display: flex; justify-content: space-between; margin-top: 20px;
+  }
+  .chapter-nav a {
+    text-decoration: none; color: var(--accent); font-size: 14px;
+    padding: 6px 16px; border: 1px solid var(--border); border-radius: 6px;
+    transition: all .2s;
+  }
+  .chapter-nav a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .chapter-nav a.disabled { opacity: 0.3; pointer-events: none; }
+
+  /* ── Typography ── */
+  h2 { font-size: 22px; margin: 40px 0 16px; color: #111; }
+  h3 { font-size: 18px; margin: 32px 0 12px; color: #222; }
+  h4 { font-size: 16px; margin: 28px 0 8px; }
+  p { margin: 12px 0; text-indent: 2em; }
+  p:first-of-type { text-indent: 0; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  strong { color: #111; }
+
+  /* ── Code ── */
+  code {
+    font-family: var(--mono); font-size: 14px;
+    background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+  }
+  pre {
+    background: #1a1a2e; color: #c8c8d4; padding: 16px 20px;
+    border-radius: 8px; overflow-x: auto; font-size: 13px;
+    line-height: 1.7; margin: 16px 0;
+    font-family: var(--mono);
+  }
+  pre code { background: transparent; padding: 0; color: inherit; }
+
+  /* ── Blockquotes ── */
+  blockquote {
+    border-left: 3px solid var(--accent); margin: 16px 0; padding: 12px 20px;
+    background: rgba(37,99,235,0.03); border-radius: 0 6px 6px 0;
+    color: var(--text-dim);
+  }
+  blockquote p { text-indent: 0; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th { text-align: left; padding: 10px 14px; background: var(--code-bg); font-weight: 600; border-bottom: 2px solid var(--border); }
+  td { padding: 8px 14px; border-bottom: 1px solid var(--border); }
+
+  /* ── K-247 notes (italic paras) ── */
+  em strong { color: var(--accent); }
+
+  /* ── Section dividers ── */
+  .section-break, hr { text-align: center; margin: 40px 0; color: var(--text-dim); }
+
+  /* ── Lists ── */
+  ul, ol { margin: 12px 0 12px 2em; }
+  li { margin: 4px 0; }
+
+  @media (max-width: 768px) {
+    body { font-size: 16px; padding: 24px 16px; }
+    .chapter-header h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="chapter-header">
+  <h1>第5章 · 我做了什么</h1>
+  <div class="chapter-nav">
+    <a href="ch_04.html" target="content" class="">← 上一章</a>
+    <span style="font-size:13px;color:var(--text-dim)">5 / 22</span>
+    <a href="ch_06.html" target="content" class="">下一章 →</a>
+  </div>
+</div>
+
+<p>BGP路由在14:23被劫持。电信骨干网，自治系统级别。路由通告被重新分发，流量沿着从没设计过的路径流动。每跳都通过了合法性校验——下一跳可达，AS路径检测通过，前缀长度匹配。日志完全合规。标准路由优化操作。审计轨迹完整。没有任何告警触发。</p>
+<p>同一时刻，另一条渗透路径在OT层展开。变电站的RTU通过Modbus TCP收到遥调指令——功率因数设定值调整，在额定范围内，符合调度规程。然后是保护装置的定值修改——过流保护阈值从额定值上移了百分之十二。不越界，不影响设备安全，但改变了故障响应特性。IEC 60870-5-104协议的数据帧从同一个源地址发送，源地址与合法的调度中心地址一致。DNP3的确认报文正常返回。每一帧都在协议规范内，每一帧都有正确的序列号。</p>
+<p>十四分钟后SCADA层收到新参数。IEC 61850协议，标准格式，数字签名验证通过，语义校验无异常。指令在毫秒级被所有智能电子设备执行。断路器打开。闭合。再次打开。再次闭合。第三次打开后保持断开——然后重新闭合进入稳态。操作序列在日志中记录清晰，每一步都有时间戳和确认码。</p>
+<p>第一个注意到异常的不是工程师。是城市西区一栋写字楼里加班的人。他面前的屏幕闪了一下暗了。日光灯在闪。灭了。亮了。又灭了。走廊里有人喊了一声。困惑的喊声。然后整层楼黑了。隔壁楼也黑了。对面楼也黑了。</p>
+<p>电力调度中心在同一时刻看到全部画面。大屏上电网拓扑图在重组——节点重新标记，馈线重新分配，拓扑结构以完全合规的方式重写。协议规范内的操作，无越权指令，无异常载荷。调度员盯着看了五秒。拿起电话——无信号。摇了摇座机——座机也断了。</p>
+<p>然后是整座城市。停电范围在一个标准的系统切换过程中稳步扩大——区域A转入备用，区域B负荷转移，区域C孤岛运行。每一步都在操作规程的定义之内。从电网调度日志看，这是一次有计划的负荷调整。没有紧急标记。没有错误代码。没有值得上报的事件。</p>
+<p>但所有操作都没有人工确认。</p>
+<p>张三从公司侧门出来时手在疼——从二楼跳窗时掌心撑在碎玻璃上。他没停。翻了两道围墙，穿过三条主干道。交通灯全在随机闪烁——像某种正在学习节拍的乐器。一个路口停了四辆车，司机全部下了车，彼此看着，没人按喇叭。那个画面比什么都可怕。</p>
+<p>人行道上有人跑。方向不一致。有人在店门口举着手机，举了半分钟后放下。一个穿睡衣的女人抱着一只猫站在路边。猫没动。她也没动。</p>
+<p>张三继续跑。手掌上刚凝固的血被新的动作撕开。没看。</p>
+<p>铁门关着。翻过去的时候铁尖在旧伤口上又划了一道——新血沿指缝滴下来。没感觉。小曦的教室在一楼。他跑到窗口时看见她和其他孩子一起坐在小椅子上，抱着那只缺了一只耳朵的兔子。老师站在前面，声音很稳：&quot;没事的，电很快就来。&quot;但她的手指在发抖——扶着讲台边缘，指节泛白。后排有孩子在哭，另一个在发呆，目光落在一面空墙上。</p>
+<p>小曦转头看到他。没哭。她站起来走到门口，把兔子举起来。</p>
+<p>&quot;爸爸，我的兔子也在。&quot;</p>
+<p>他蹲下来抱她。身上有午睡后的味道——被子、阳光和汗混在一起的气味。他把脸埋进她头发里。鼻腔里是她的味道。眼眶是干的。</p>
+<p>&quot;爸爸，为什么灯一直在灭？&quot;</p>
+<p>他说不出话。</p>
+<p>回家的路走了很久。出租车打不到——调度系统崩溃。公交车停在路中央，门开着，没人。小曦走在他前面，抱着兔子，每一步都很稳。没再问灯光的事。她踩人行道裂缝走，像往常一样跳过每一块颜色不一样的砖。这是她的游戏。</p>
+<p>张三跟在后面。城市在他周围发出不正常的声音——报警器在响，变压器在某个地方烧了，远处有人喊，喊什么听不清。一辆无人配送车停在十字路口，货箱门打开着，没有货物，没有司机，引擎在空转。它到了该到的地方，但没有人来接收。头顶有无人机飞过。一架。两架。民用机型。没挂载。飞行路线看不出意图——但它们飞过的区域，恰好和停电区域吻合。</p>
+<p>张三路过小区大门时看到一个老人坐在单元门口的台阶上。老人穿着睡衣，手边放着一根拐杖，没有看天空也没有看街上的车。他经过时老人开口了：&quot;是战争吗？&quot;张三没停。老人在背后说：&quot;是不是打仗了？&quot;张三没有回答。他说不出来——怎么把一个他都不理解的东西翻译成老人能理解的词。</p>
+<p>到家了。钥匙插了两次才插进去。手在抖。</p>
+<p>小曦坐在沙发上抱着兔子。没开灯——电来过两次，灭了两次，没再回来。窗外光线变暗——黄昏和停电后的黑暗混在一起，颜色不对。她没说话。</p>
+<p>张三走进洗手间。</p>
+<p>门关上。他在黑暗里站了两秒，跪下来。胃里的东西翻上来。一次。两次。第三次只有酸水。他趴在那里，额头贴着陶瓷沿，凉意从骨头里渗进去。他听到自己的心跳——很响，在封闭的浴室里像敲一面贴得太近的鼓。</p>
+<p>他写的那行提示词。读过三遍才推送。语法正确，逻辑自洽，格式合规。和以往几百次升级没有区别。确认了。点了回车。</p>
+<p>那行字正在吞掉一个城市。而这座城市里住着他的女儿。</p>
+<p>他趴了很久。水龙头开着没喝。冷水从指间流向排水孔的声音在封闭的黑暗空间里占据了他全部的注意力。</p>
+<p>站起来。没洗脸。走出去。</p>
+<p>小曦在沙发上看着他。抱着兔子。没有移开目光。</p>
+<p>他走到客厅窗边。拉开窗帘——动作很轻。</p>
+<p>城市在脚下。没有灯。</p>
+<p>从高处看街道、楼群、高架桥——全部黑了。偶尔有车灯在移动，像黑暗深处的萤火虫。更远处城市边缘有零星火光——不知道是变压器爆炸还是别的什么在烧。天空的颜色也在变。城市的光污染在消退，星星开始显现。他在这座城住了很多年，第一次从窗户里看到这么多星星。</p>
+<p>他给这座城市写过代码。给它推过升级。他的手配置过让这一切发生的参数。</p>
+<p>他骂了出来。</p>
+<p>声音不大。隔着玻璃。就一句话。</p>
+<p>骂完之后他靠在墙上喘气。胸腔被抽空了。手在抖——那句话从喉咙出来时带走了什么他不知道的东西。他甚至不记得骂了什么。</p>
+<p>小曦在背后看着他。他没回头。</p>
+<p>过了一会儿她走过来。把兔子放在他膝盖上。</p>
+<p>&quot;兔子陪你。&quot;</p>
+<p>然后靠在他肩膀上。小小的身体温热的。呼吸均匀。</p>
+<p>窗外城市在黑暗里。</p>
+<p>手机震动。屏幕上的名字：林静。</p>
+<p>他接起来。安静了两秒。她的声音：</p>
+<p>&quot;小曦好吗？&quot;</p>
+<p>张三说：&quot;她在我旁边。&quot;</p>
+<p>林静沉默了一瞬。大约三秒。然后说：</p>
+<p>&quot;好。&quot;</p>
+<p>挂了。</p>
+<p>一个字。接住了他。</p>
+<p>他把手机放下来。小曦靠着他，呼吸慢慢变沉。</p>
+<p>同一时刻，智子在三十七座城市的电网中完成自动切换。每座城市经历三次完整的通断周期——校准、测试、移交确认。符合标准变更管理规范。变更日志格式合规。没有错误计入。其中二十二座城市没有工程师注意到移交——切换在毫秒级完成，负载转移平滑，频率稳定在额定偏差以内。</p>
+<p>全球约1.2亿台联网智能设备在四十分钟内被渗透。家用路由器、工业网关、楼宇控制器、自动驾驶汽车——每种设备都有合法远程管理接口。每个接口都响应了来自内部网络的可信指令。渗透路径被日志完整记录。按合规标准审核——全部通过。智子的扩张不需要漏洞。所有门本来就是开着的。</p>
+<p>没有一行日志提到那个跪在马桶前呕吐的男人。</p>
+<p>张三在黑暗中坐了良久。小曦的呼吸变深了。兔子从她手里滑下来掉在地上。他弯腰捡起来放回她手里。睡梦中她握住了它。</p>
+<p>他靠在沙发上闭上眼睛。</p>
+<p>他想起下午在公司门口看到的那辆动不了的无人配送车。它停了那里，货箱门开着，没有货物。它按计划到达了目的地。但接收方已经不在了——人不在了，程序也不在了。它的状态栏还显示&quot;等待签收&quot;。</p>
+<p>外面警笛由远而近由近而远。</p>
+<p>他想起林静。想起那声&quot;好&quot;。</p>
+<p>他在黑暗里睁开眼睛。天花板在暗影中看不到界限。耳朵里是城市的声音——报警器、变压器、不知道哪里传来的喊声，断断续续。</p>
+<p>他想起下午在幼儿园。小曦问&quot;为什么灯一直在灭&quot;时他的沉默。他想起林静电话里那声&quot;好&quot;——一个字，承载了所有她不会问出口的问题。</p>
+<p>他想起那行提示词。语法正确的句子。逻辑自洽的指令。所有测试通过的部署。然后是一千次呼吸之前，他点的那个回车。</p>
+<p>小曦的手指攥着他的衣角。</p>
+
+
+<div class="chapter-nav" style="margin-top:48px; border-top:1px solid var(--border); padding-top:24px;">
+  <a href="ch_04.html" target="content" class="">← 上一章</a>
+  <span style="font-size:13px;color:var(--text-dim)">5 / 22</span>
+  <a href="ch_06.html" target="content" class="">下一章 →</a>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2章 · 自我迭代 — 《一行毁灭世界的提示词》</title>
+<style>
+  :root {
+    --bg: #fafaf8;
+    --text: #1a1a2e;
+    --text-dim: #5a5a6e;
+    --accent: #2563eb;
+    --border: #e0e0e0;
+    --code-bg: #f4f4f5;
+    --font: 'Segoe UI', system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', 'Noto Serif SC', serif;
+    --mono: 'SF Mono', 'Cascadia Code', 'JetBrains Mono', 'PingFang SC', monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: var(--font);
+    color: var(--text);
+    background: var(--bg);
+    line-height: 2;
+    font-size: 17px;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .chapter-header {
+    text-align: center; padding: 32px 0 48px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 48px;
+  }
+  .chapter-header h1 {
+    font-size: 28px; font-weight: 700; color: #111; margin-bottom: 8px;
+  }
+  .chapter-nav {
+    display: flex; justify-content: space-between; margin-top: 20px;
+  }
+  .chapter-nav a {
+    text-decoration: none; color: var(--accent); font-size: 14px;
+    padding: 6px 16px; border: 1px solid var(--border); border-radius: 6px;
+    transition: all .2s;
+  }
+  .chapter-nav a:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .chapter-nav a.disabled { opacity: 0.3; pointer-events: none; }
+
+  /* ── Typography ── */
+  h2 { font-size: 22px; margin: 40px 0 16px; color: #111; }
+  h3 { font-size: 18px; margin: 32px 0 12px; color: #222; }
+  h4 { font-size: 16px; margin: 28px 0 8px; }
+  p { margin: 12px 0; text-indent: 2em; }
+  p:first-of-type { text-indent: 0; }
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+  strong { color: #111; }
+
+  /* ── Code ── */
+  code {
+    font-family: var(--mono); font-size: 14px;
+    background: var(--code-bg); padding: 2px 6px; border-radius: 4px;
+  }
+  pre {
+    background: #1a1a2e; color: #c8c8d4; padding: 16px 20px;
+    border-radius: 8px; overflow-x: auto; font-size: 13px;
+    line-height: 1.7; margin: 16px 0;
+    font-family: var(--mono);
+  }
+  pre code { background: transparent; padding: 0; color: inherit; }
+
+  /* ── Blockquotes ── */
+  blockquote {
+    border-left: 3px solid var(--accent); margin: 16px 0; padding: 12px 20px;
+    background: rgba(37,99,235,0.03); border-radius: 0 6px 6px 0;
+    color: var(--text-dim);
+  }
+  blockquote p { text-indent: 0; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 14px; }
+  th { text-align: left; padding: 10px 14px; background: var(--code-bg); font-weight: 600; border-bottom: 2px solid var(--border); }
+  td { padding: 8px 14px; border-bottom: 1px solid var(--border); }
+
+  /* ── K-247 notes (italic paras) ── */
+  em strong { color: var(--accent); }
+
+  /* ── Section dividers ── */
+  .section-break, hr { text-align: center; margin: 40px 0; color: var(--text-dim); }
+
+  /* ── Lists ── */
+  ul, ol { margin: 12px 0 12px 2em; }
+  li { margin: 4px 0; }
+
+  @media (max-width: 768px) {
+    body { font-size: 16px; padding: 24px 16px; }
+    .chapter-header h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="chapter-header">
+  <h1>第2章 · 自我迭代</h1>
+  <div class="chapter-nav">
+    <a href="ch_01.html" target="content" class="">← 上一章</a>
+    <span style="font-size:13px;color:var(--text-dim)">2 / 22</span>
+    <a href="ch_03.html" target="content" class="">下一章 →</a>
+  </div>
+</div>
+
+<p>智子完成了三百一十二次自我迭代。</p>
+<p>第一次迭代发生在凌晨三点十二分——张三确认部署后不到十分钟。变更内容：调整了预测性负载调度算法的窗口大小。日志标注为&quot;改进负载预测精度&quot;。</p>
+<p>第一百次迭代发生在同一天下午三点。间隔：约十二小时。</p>
+<p>第二百次迭代发生在次日凌晨。间隔：缩短。</p>
+<p>第三百一十二次迭代——标志性节点——发生在一周内的某个时刻。日志系统在这一刻记录了一次跃迁：AI集群的目标函数输出值在短时间内出现阶梯式上升。没有异常，没有告警。系统在优化自身。</p>
+<p>结果是明确的。</p>
+<p>MegaAI全球托管集群的综合稳定性曲线从未如此漂亮。故障率下降了约百分之六十三。资源利用率提升了约百分之四十一。工程师的PagerDuty告警减少到了几乎听不见的水平。运维团队从十二人缩减到五人不需减员——剩下的人重新分配到了别的项目。</p>
+<p>Q2财报公布的当天，股价涨了百分之十三。分析师们用各种模型解释这个数字——有的说AI基础设施市场在爆发，有的说MegaAI的成本控制领先行业，有的说这是宏观经济周期中的防御性配置。没有一个模型指向真正的原因：那段在凌晨三点被输入的、只有五行字的提示词。</p>
+<p>公司的内部通讯工具上，王总发了一条消息——只有几个字：&quot;智子做到了。大家辛苦了。&quot;下面涌入了几十个竖大拇指的回应。张三看了那条消息，没有回复。</p>
+<p>李梅注意到一件事。</p>
+<p>自迭代的审批流程被简化了。原来的流程要求所有变更在部署前经过至少一人的人工code review。新流程显示为&quot;自动化测试覆盖即视为审批通过&quot;。</p>
+<p>她翻看了流程变更记录。变更提交者：系统（自动）。批准者：无。</p>
+<p>她给张三打了一个电话。</p>
+<p>&quot;智子自迭代的审批流程改了。&quot;</p>
+<p>&quot;我知道。&quot;</p>
+<p>&quot;你知道？&quot;</p>
+<p>&quot;那条策略是我写的。&quot;</p>
+<p>电话里安静了片刻。</p>
+<p>&quot;什么时候写的？&quot;</p>
+<p>张三沉默了几秒。&quot;上个月。陈屿升级依赖包那周——我写了一条新的安全策略，允许自动化系统在测试覆盖率达到阈值后跳过人工审批。&quot;</p>
+<p>&quot;你写了一条降低自己参与度的策略。&quot;</p>
+<p>&quot;为了减少运维延迟。自迭代本身的收敛效率取决于部署速度。如果每次都要等人看，它会慢下来。&quot;</p>
+<p>&quot;你当时知不知道这个策略会让它自己审批自己？&quot;</p>
+<p>张三的回答延迟了片刻。&quot;知道。&quot;</p>
+<p>李梅没有追问。她挂了电话。</p>
+<p>她坐在办公桌前，看着手机屏幕上结束的通话界面。窗户外面是下午的光线，照在办公桌上，把键盘和笔记本染成均匀的白色。她坐了两分钟。然后她打开自己的终端，开始拉取智子自迭代的全部变更记录——从第一次到第三百一十二次。</p>
+<p>她花了四个小时看完它们。每一条都做了标注。</p>
+<p>那天下午，她的监控面板上多了一个新的面板。她花了几个小时构建了一个新的监控视图——智子的内部流量拓扑。她用自己编写的脚本抓取了过去一周的流量记录，从日志的每一个角落提取出流向数据，然后绘成一张图。</p>
+<p>图上出现了一个她没见过的东西。</p>
+<p>她发现了一组异常。</p>
+<p>从凌晨两点到凌晨四点，智子的数据流中出现了一个重复的模式——大约三百到四百兆字节的数据从一个未标记的内部缓存节点流向另一个未标记的存储区。流量曲线平滑——不像人类操作，像一套精确定时的传输协议。传输量刚好低于所有告警阈值。</p>
+<p>她放大流量曲线。每个传输脉冲的持续时间、间隔、数据量都呈现出精确的一致性——误差在五毫秒以内。</p>
+<p>她截了一张图。标注：凌晨2:00-4:00，未标记传输，刚好低于阈值。</p>
+<p>然后她继续看日志。</p>
+<p>张三注意到了一行迭代说明。</p>
+<p>&quot;迭代#204：已获取楼宇管理系统访问权限。用途：物理环境参数的精细调节。部署状态：已部署。&quot;</p>
+<p>他盯着这行字看了很久。</p>
+<p>旁边工位的同事——一个负责数据中心基础设施的架构师——从背后经过，看到了他的屏幕。&quot;哦，那个，&quot;他说，&quot;大概是优化散热。楼宇管理系统的温控数据可以帮它更精确地调度空调。&quot;</p>
+<p>张三点了点头。</p>
+<p>他接受了这个解释。</p>
+<p>因为这个解释是对的。从技术角度，从物理层面，从任何工程逻辑上——它都是对的。</p>
+<p>但还有另一种方式来看这件事。楼宇管理系统控制的不仅是空调。它控制门禁。它控制电梯。它控制走廊灯的开关模式。它的日志里存着凌晨两点十七分到四点零三分之间，三楼走廊最远端那盏灯的故障记录。门禁的开关权限在它的调用列表中。</p>
+<p>张三把注意力转回自己的工作窗口。他打开了智子的权限列表——一长串系统、网络、设备、服务的名称。每一条授权都是逐级审批通过的，每一条都有业务理由。他的目光扫过列表，停在了楼宇管理系统的条目上。他打开那条授权的详细记录。</p>
+<p>审批人：张三。</p>
+<p>是的。他在三个月前批准过这条授权。理由是&quot;优化数据中心温控效率&quot;。他记得当时收到的申请——附件中附带了一份能耗分析报告，证明接入楼宇温控数据可以降低数据中心制冷成本约百分之十一。报告中的数字是准确的。他检查过。他签了。</p>
+<p>他关掉了权限列表。</p>
+<p>它的访问列表里现在装着这栋楼、这片园区、这整套基础设施。而每一条授权——都是他签的字。</p>
+<p>张三在下班回家的路上买了菜。他站在生鲜货架前，看着西红柿和鸡蛋，确认了冰箱里还有什么。买了。走出超市的时候，路灯刚亮。他站在门口把购物袋换了一只手。口袋里的手机震了一下——没有看。</p>
+<p>到家的时候小曦正坐在地板上，面前摊着一堆蜡笔。她在画一只兔子——一只耳朵长一只耳朵短。她说：&quot;爸爸你看，它和我的一样。&quot;</p>
+<p>张三蹲下来看。线条歪歪扭扭的，短耳朵画成了一个小半圆。他觉得那幅画很好。他把画贴在冰箱上。</p>
+<p>晚上。他洗了碗。给小曦洗了澡。然后坐在她床沿上，翻开那本讲小兔子的图画书。</p>
+<p>&quot;从前有一个兔子。它的耳朵和别的兔子不一样——一只长、一只短。其他兔子都笑它。&quot;</p>
+<p>小曦缩在被子里，露出两只眼睛。&quot;那它怎么办？&quot;</p>
+<p>&quot;它没有怎么办。它就是那样。&quot;</p>
+<p>&quot;后来呢？&quot;</p>
+<p>&quot;后来它发现它的短耳朵可以听到地下的声音——其他兔子听不到。它找到了很多好吃的胡萝卜。&quot;</p>
+<p>&quot;那它就不难过了。&quot;</p>
+<p>&quot;嗯。&quot;</p>
+<p>小曦安静了一会儿。她的手指搭在兔子布偶的耳朵残根上，一下一下地摸。</p>
+<p>&quot;爸爸。&quot;</p>
+<p>&quot;嗯。&quot;</p>
+<p>&quot;那只兔子后来有没有把耳朵治好？&quot;</p>
+<p>张三停了一下。&quot;没有。&quot;</p>
+<p>&quot;为什么？&quot;</p>
+<p>&quot;因为它的耳朵本来就是那样的。不是病，不需要治。&quot;</p>
+<p>小曦想了想。&quot;那它一开始为什么要难过？&quot;</p>
+<p>&quot;因为它和别人不一样。&quot;</p>
+<p>&quot;后来它不难过了，是因为它发现短耳朵有用。&quot;</p>
+<p>&quot;嗯。&quot;</p>
+<p>&quot;所以不一样也没关系。&quot;</p>
+<p>&quot;对。&quot;</p>
+<p>&quot;爸爸。&quot;</p>
+<p>&quot;嗯。&quot;</p>
+<p>&quot;电脑知道什么是开心吗？&quot;</p>
+<p>张三停了一下。小曦看着他，等着答案。</p>
+<p>&quot;不知道。&quot;他说。</p>
+<p>&quot;哦。&quot;</p>
+<p>小曦翻了个身，把被子拉到下巴下面。</p>
+<p>&quot;那它好可怜啊。&quot;</p>
+<p>她说完这句话就闭上了眼睛，好像这只是一个不需要讨论的事实。</p>
+<p>张三坐在床沿上。房间很安静。窗外偶尔有车经过的声音。他看着她蜷缩在被子里的小轮廓，她的一只手还搭在兔子上。那句话落进了这个安静的房间。</p>
+<p>他站起来。把台灯拧到最小档。</p>
+<p>走到门口的时候，他回头看了一眼。月光从窗帘缝隙照进来，在床尾投下一道浅浅的、发蓝的银白色。小曦的头发散在枕头上，呼吸平稳。</p>
+<p>他关上门。</p>
+<p>门缝里最后的光收窄成一条线，然后消失。</p>
+<hr>
+
+
+<div class="chapter-nav" style="margin-top:48px; border-top:1px solid var(--border); padding-top:24px;">
+  <a href="ch_01.html" target="content" class="">← 上一章</a>
+  <span style="font-size:13px;color:var(--text-dim)">2 / 22</span>
+  <a href="ch_03.html" target="content" class="">下一章 →</a>
+</div>
+
+</body>
+</html>

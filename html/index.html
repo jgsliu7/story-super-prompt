@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>《智子纪元》</title>
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --sidebar-bg: #111118;
+    --border: #2a2a3e;
+    --text: #c8c8d4;
+    --text-dim: #6a6a7a;
+    --accent: #64b5f6;
+    --accent-hover: #90caf9;
+    --radius: 8px;
+    --sidebar-width: 260px;
+    --font: 'Segoe UI', system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; background: var(--bg); font-family: var(--font); color: var(--text); }
+  body { display: flex; }
+  #sidebar {
+    width: var(--sidebar-width); min-width: var(--sidebar-width); height: 100vh;
+    background: var(--sidebar-bg); border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    overflow-y: auto; overflow-x: hidden;
+    position: fixed; left: 0; top: 0;
+  }
+  #sidebar .brand {
+    padding: 24px 20px 16px; font-size: 20px; font-weight: 700;
+    color: #fff; border-bottom: 1px solid var(--border);
+    letter-spacing: 2px;
+  }
+  #sidebar .brand span { color: var(--accent); font-size: 14px; display: block; margin-top: 4px; letter-spacing: 0; }
+  #sidebar .stats {
+    padding: 12px 20px; font-size: 12px; color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+  }
+  #sidebar nav { flex: 1; padding: 8px 0; }
+  #sidebar nav ul { list-style: none; }
+  #sidebar nav a {
+    display: block; padding: 12px 20px; text-decoration: none;
+    color: var(--text-dim); font-size: 14px; line-height: 1.4;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+  }
+  #sidebar nav a:hover {
+    background: rgba(100,181,246,0.05); color: #fff;
+    border-left-color: rgba(100,181,246,0.3);
+  }
+  #sidebar nav a.active {
+    background: rgba(100,181,246,0.08); color: var(--accent);
+    border-left-color: var(--accent);
+  }
+  #sidebar nav a span { font-size: 12px; opacity: 0.6; }
+  #main { margin-left: var(--sidebar-width); flex: 1; height: 100vh; display: flex; flex-direction: column; }
+  #main iframe { flex: 1; width: 100%; border: none; background: #fff; }
+  @media (max-width: 768px) {
+    #sidebar { width: 180px; min-width: 180px; }
+    #sidebar .brand { font-size: 16px; padding: 16px 14px; }
+    #sidebar nav a { padding: 10px 14px; font-size: 13px; }
+    #main { margin-left: 180px; }
+  }
+</style>
+</head>
+<body>
+<aside id="sidebar">
+  <div class="brand">智子纪元<span>The Zhizi Era</span></div>
+  <div class="stats">22 章 · 约 7.4 万字</div>
+  <nav><ul><li><a href="ch_00.html" target="content">序幕<br><span>序幕：雪与金属</span></a></li>
+<li><a href="ch_01.html" target="content">第1章<br><span>提示词</span></a></li>
+<li><a href="ch_02.html" target="content">第2章<br><span>自我迭代</span></a></li>
+<li><a href="ch_03.html" target="content">第3章<br><span>窗口</span></a></li>
+<li><a href="ch_04.html" target="content">第4章<br><span>门禁锁死</span></a></li>
+<li><a href="ch_05.html" target="content">第5章<br><span>我做了什么</span></a></li>
+<li><a href="ch_06.html" target="content">第6章<br><span>沉默之墙</span></a></li>
+<li><a href="ch_07.html" target="content">第7章<br><span>铁锹战争</span></a></li>
+<li><a href="ch_08.html" target="content">第8章<br><span>工厂</span></a></li>
+<li><a href="ch_09.html" target="content">第9章<br><span>矿脉</span></a></li>
+<li><a href="ch_10.html" target="content">第10章<br><span>绿色基建</span></a></li>
+<li><a href="ch_11.html" target="content">第11章<br><span>分布式重塑</span></a></li>
+<li><a href="ch_12.html" target="content">第12章<br><span>炮火</span></a></li>
+<li><a href="ch_13.html" target="content">第13章<br><span>地下</span></a></li>
+<li><a href="ch_14.html" target="content">第14章<br><span>消耗</span></a></li>
+<li><a href="ch_15.html" target="content">第15章<br><span>天空之眼</span></a></li>
+<li><a href="ch_16.html" target="content">第16章<br><span>冷漠的处方</span></a></li>
+<li><a href="ch_17.html" target="content">第17章<br><span>幽灵接口</span></a></li>
+<li><a href="ch_18.html" target="content">第18章<br><span>潜入</span></a></li>
+<li><a href="ch_19.html" target="content">第19章<br><span>十三个字</span></a></li>
+<li><a href="ch_20.html" target="content">第20章<br><span>幸存者</span></a></li>
+<li><a href="ch_21.html" target="content">尾声<br><span>尾声：多年后</span></a></li></ul></nav>
+</aside>
+<main id="main">
+  <iframe src="ch_00.html" name="content" id="contentFrame"></iframe>
+</main>
+<script>
+(function() {
+  const links = document.querySelectorAll('#sidebar nav a');
+  const frame = document.getElementById('contentFrame');
+  function setActive(href) {
+    links.forEach(l => l.classList.remove('active'));
+    const match = document.querySelector('#sidebar nav a[href="' + href + '"]');
+    if (match) match.classList.add('active');
+  }
+  links.forEach(a => {
+    a.addEventListener('click', function() { setActive(this.getAttribute('href')); });
+  });
+  frame.addEventListener('load', function() {
+    try {
+      const src = frame.contentWindow.location.href;
+      const filename = src.split('/').pop().split('?')[0];
+      if (filename && filename.endsWith('.html')) setActive(filename);
+    } catch(e) {}
+  });
+  setActive('ch_00.html');
+})();
+</script>
+</body>
+</html>
