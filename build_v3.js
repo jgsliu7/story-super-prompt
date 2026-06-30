@@ -5,7 +5,7 @@ const { marked } = require('marked');
 marked.setOptions({ breaks: true, gfm: true });
 
 const TEMPLATE = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf-8');
-const OUTPUT_DIR = path.join(__dirname, 'html');
+const OUTPUT_DIR = path.join(__dirname, 'docs');
 
 if (!fs.existsSync(OUTPUT_DIR)) fs.mkdirSync(OUTPUT_DIR, { recursive: true });
 

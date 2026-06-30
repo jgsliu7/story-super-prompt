@@ -11,7 +11,7 @@
 ## 构建
 
 ```bash
-node build_v3.js   # 14 个源文件 → html/ 22 章 + index.html
+node build_v3.js   # 14 个源文件 → docs/ 22 章 + index.html
 ```
 
 源文件分散在 `novel/`、`novel_bible/`、根目录（见下）。`build_v3.js` 自动汇总、转 HTML、生成导航页。改完正文必须重跑此命令。
