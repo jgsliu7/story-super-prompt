@@ -269,5 +269,9 @@ const indexHTML = `<!DOCTYPE html>
 
 fs.writeFileSync(path.join(OUTPUT_DIR, 'index.html'), indexHTML, 'utf-8');
 console.log(`✓ index.html`);
+
+// GitHub Pages: bypass Jekyll
+fs.writeFileSync(path.join(OUTPUT_DIR, '.nojekyll'), '', 'utf-8');
+
 console.log(`\nDone! ${chapterData.length} chapters → ${OUTPUT_DIR}/`);
 console.log(`Total: ~${estimatedWords} chars (~${Math.round(estimatedWords / 10000 * 10) / 10} 万字)`);
