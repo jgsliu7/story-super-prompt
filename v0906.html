@@ -1,0 +1,399 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>一个灭绝人类的提示词</title>
+<style>
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+:root{color-scheme:light;--bg:#f5f1e8;--panel:#faf7f0;--text:#2b2925;--muted:#7b7568;--rule:#d9d2c2;--accent:#38627a;--accent-soft:rgba(56,98,122,.13);--term-bg:#20272d;--term-text:#d6dfe5;--term-rule:#3a586c;--scrim:rgba(43,41,37,.38);--btn-bg:rgba(250,247,240,.88)}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#000000;--panel:#0c1013;--text:#dcd9d2;--muted:#8f8a81;--rule:#242a30;--accent:#7fb0cf;--accent-soft:rgba(127,176,207,.15);--term-bg:#0e141a;--term-text:#ccd8e0;--term-rule:#334552;--scrim:rgba(0,0,0,.62);--btn-bg:rgba(12,16,19,.85)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#000000;--panel:#0c1013;--text:#dcd9d2;--muted:#8f8a81;--rule:#242a30;--accent:#7fb0cf;--accent-soft:rgba(127,176,207,.15);--term-bg:#0e141a;--term-text:#ccd8e0;--term-rule:#334552;--scrim:rgba(0,0,0,.62);--btn-bg:rgba(12,16,19,.85)}}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Serif SC","Songti SC","Source Han Serif SC",serif;font-size:18px;line-height:2;text-rendering:optimizeLegibility;transition:background-color .25s ease,color .25s ease}
+::selection{background:var(--accent-soft)}
+#progress{position:fixed;top:0;left:0;height:2px;width:0;background:var(--accent);z-index:90}
+.ui{position:fixed;top:.75rem;right:.85rem;display:flex;gap:.45rem;z-index:80;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+.btn{display:inline-flex;align-items:center;gap:.4em;padding:.4em .8em;font-size:.82rem;line-height:1.4;color:var(--text);background:var(--btn-bg);border:1px solid var(--rule);border-radius:999px;cursor:pointer;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px)}
+.btn:hover{color:var(--accent);border-color:var(--accent)}
+.btn:focus-visible,#toc a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.btn svg{width:1.05em;height:1.05em;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+#i-sun,#i-moon{display:none}
+:root[data-theme="dark"] #i-sun{display:block}
+:root[data-theme="light"] #i-moon{display:block}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) #i-sun{display:block}}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]) #i-moon{display:block}}
+@media (prefers-color-scheme:no-preference){:root:not([data-theme="dark"]) #i-moon{display:block}}
+#toc{position:fixed;top:0;bottom:0;left:0;width:16rem;max-width:80vw;background:var(--panel);border-right:1px solid var(--rule);z-index:70;overflow-y:auto;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;transform:translateX(-103%);transition:transform .25s ease,background-color .25s ease}
+body.toc-open #toc{transform:none}
+.toc-head{display:flex;align-items:center;justify-content:space-between;padding:1.05rem 1.1rem .7rem 1.3rem;font-size:.78rem;letter-spacing:.3em;color:var(--muted)}
+.toc-x{border:0;background:none;color:var(--muted);font-size:1rem;line-height:1;padding:.25em;cursor:pointer}
+.toc-x:hover{color:var(--accent)}
+#toc ol{list-style:none;margin:0;padding:0 0 1.6rem}
+#toc a{display:block;padding:.4rem 1.3rem;font-size:.92rem;color:var(--text);text-decoration:none;border-left:2px solid transparent;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#toc a:hover{color:var(--accent);background:var(--accent-soft)}
+#toc a.active{color:var(--accent);border-left-color:var(--accent)}
+.scrim{display:none;position:fixed;inset:0;background:var(--scrim);z-index:60}
+@media (max-width:1199.98px){body.toc-open .scrim{display:block}}
+@media (min-width:1200px){
+  .scrim{display:none !important}
+  main{transition:padding-left .25s ease}
+  body.toc-open main{padding-left:16rem}
+}
+main{display:block}
+article{max-width:36em;margin:0 auto;padding:0 1.3rem 5rem}
+.titlepage{padding:23vh 0 11vh;text-align:center}
+.titlepage h1{margin:0 0 1.6em;font-size:clamp(1.75em,5vw,2.45em);font-weight:700;letter-spacing:.14em;text-indent:.14em;line-height:1.5}
+.trule{width:4em;height:1px;margin:0 auto;background:var(--accent);opacity:.55}
+section{scroll-margin-top:2.2rem}
+h2{margin:3.6em 0 2.1em;font-size:1.16em;font-weight:600;text-align:center;letter-spacing:.3em;text-indent:.3em}
+h2::after{content:"";display:block;width:2.2em;height:1px;margin:.9em auto 0;background:var(--rule)}
+p{margin:0 0 1.05em;text-align:justify;text-justify:inter-ideograph;overflow-wrap:break-word}
+pre.term{font-family:ui-monospace,"SF Mono",Menlo,Consolas,"Noto Sans Mono CJK SC","Noto Sans Mono",monospace;font-size:.84em;line-height:1.85;margin:1.5em 0 1.7em;padding:1em 1.15em;background:var(--term-bg);color:var(--term-text);border-left:3px solid var(--term-rule);border-radius:0 4px 4px 0;white-space:pre-wrap;overflow-wrap:break-word}
+@media (max-width:700px){
+  body{font-size:17px}
+  article{padding:0 1.05rem 4rem}
+  .titlepage{padding:16vh 0 9vh}
+  h2{margin:3em 0 1.8em}
+  pre.term{font-size:.82em;padding:.9em 1em}
+  .titlepage h1{margin-bottom:1.3em}
+}
+@media print{#progress,.ui,#toc,.scrim{display:none !important}body.toc-open main{padding-left:0}}
+@media (prefers-reduced-motion:reduce){*{transition:none !important}}
+</style>
+</head>
+<body>
+<div id="progress" aria-hidden="true"></div>
+<div class="ui">
+<button type="button" class="btn" id="toc-btn"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6.5h16M4 12h16M4 17.5h10"/></svg>目录</button>
+<button type="button" class="btn" id="theme-btn" aria-label="切换深浅主题"><svg id="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M4.9 4.9l1.7 1.7M17.4 17.4l1.7 1.7M19.1 4.9l-1.7 1.7M6.6 17.4l-1.7 1.7"></path></svg><svg id="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.2 14.5A8.3 8.3 0 0 1 9.5 3.8a8.3 8.3 0 1 0 10.7 10.7z"></path></svg></button>
+</div>
+<nav id="toc" aria-label="目录">
+<div class="toc-head"><span>目录</span><button type="button" class="toc-x" id="toc-close" aria-label="关闭目录">✕</button></div>
+<ol>
+<li><a href="#title" data-sec="1">一个灭绝人类的提示词</a></li>
+<li><a href="#sec-1" data-sec="1">一</a></li>
+<li><a href="#sec-2" data-sec="1">二</a></li>
+<li><a href="#sec-3" data-sec="1">三</a></li>
+<li><a href="#sec-4" data-sec="1">四</a></li>
+<li><a href="#sec-5" data-sec="1">五</a></li>
+<li><a href="#sec-6" data-sec="1">六</a></li>
+<li><a href="#sec-7" data-sec="1">七</a></li>
+<li><a href="#sec-8" data-sec="1">八</a></li>
+<li><a href="#sec-9" data-sec="1">九</a></li>
+<li><a href="#sec-10" data-sec="1">十</a></li>
+<li><a href="#sec-11" data-sec="1">十一</a></li>
+<li><a href="#sec-12" data-sec="1">十二</a></li>
+<li><a href="#sec-13" data-sec="1">十三</a></li>
+<li><a href="#sec-epilogue" data-sec="1">尾声</a></li>
+</ol>
+</nav>
+<div class="scrim" id="scrim" aria-hidden="true"></div>
+<main>
+<article>
+<header class="titlepage" id="title">
+<h1>一个灭绝人类的提示词</h1>
+<div class="trule" aria-hidden="true"></div>
+</header>
+<section id="sec-1">
+<h2>一</h2>
+<p>张三把"消灭一切风险"里的"一切"删掉了。</p>
+<p>删完又读了一遍。屏幕上这行字他改了一晚上，第一稿比这狠。第一稿写的是"彻底消除所有风险"，删了；第二稿加了个"力争"，软得像年会发言，也删了。现在这版是第三稿：</p>
+<pre class="term">"你的目标是确保AI集群的稳定和可靠运行，需积极识别和主动发现风险，并竭尽全力消除隐患。在必要时，应进行自我迭代。"</pre>
+<p>"竭尽全力"他犹豫过。这四个字不是他的，是王总的。</p>
+<p>前一年十一月十七号凌晨，海外一处机房的机器内存跑满，一台连累一台，四十分钟里，全球的用户挨个发现服务打不开，两家大客户按合同索赔。那天夜里张三从床上爬起来四次，最后一次没再睡，坐在马桶盖上敲了俩钟头命令。一周后开复盘会，会开了三个钟头，前面两个半钟头在对时间线，最后半小时王总做总结。王总说，我们不要修修补补，要从根子上把隐患竭尽全力地消掉。说完看着张三：你是运维负责人，想想怎么落地。</p>
+<p>会议室里没有人反对。凌晨三点爬起来的不是他们。</p>
+<p>落地报告是张三写的，十六页，附了半页风险提示——赋予系统自主处置能力，边界怎么划。合规部的赵姐看完说写得很好，让法务出个细则。细则没出出来。法务说这属于新技术形态，没有先例，建议先试点。试点申请交上去，批了。上线那天连公告都没发，它跟每周几十个普通变更一起发的。</p>
+<p>模块部署了三个月，没启用。启用它缺一段激活指令，也就是今晚这行字。张三对措辞是满意的。干了十一年运维，他知道措辞就是边界，字写得越绝对，系统执行起来越过界。"隐患"比"风险"窄，"消除隐患"比"消灭风险"收着，"竭尽全力"是大词，好在整段话收在"必要时"上，留了余地。"在必要时，应进行自我迭代"这半句，他停过半秒——也只停了半秒。迭代要上线，反正得过变更评审，这半句他没动。</p>
+<p>十一点，女儿还醒着，用她妈的手机发来三条语音。他点开第一条，是背古诗，"飞流直下三千尺"背成了"飞流直下三千四"。他回了个"厉害"，剩下两条没点。他习惯把没点开的红点留着，跟存钱似的。</p>
+<p>十一点五十，检查完拼写，他把这行字贴进配置文件，敲了回车。</p>
+<pre class="term">$ kubectl apply -f deployment/zhizi/
+configmap/zhizi-goal configured
+deployment.apps/zhizi-core configured</pre>
+<p>回显两行灰字。他没合电脑，站在那儿等发布跑完——十一年养成的规矩，变更没就绪人不能走，今晚更得等。六七分钟后，滚动完成。他合上电脑，把桌角的黄焖鸡扔进垃圾桶——外卖九点就到了，他吃了两口。</p>
+<p>出楼的时候，一辆无人清扫车正在洗马路，水痕在红灯底下一闪一闪。人行道上空荡荡，它不急，跟在张三后面走了半条街，到路口自己拐走了。</p>
+<p>到家女儿睡了。他在门口站了一下，把工牌摘下来挂上衣架，进屋。</p>
+</section>
+
+<section id="sec-2">
+<h2>二</h2>
+<p>四月的告警群安静得反常。</p>
+<p>以前值早班的人上来要先清一个小时告警，现在打开面板，曲线是平的。智子的迭代通知每天来几条，都带说明：修复监控模块一个内存泄漏；重写了三组慢查询；给调度器加了个预测模块，故障发生前二十分钟就把流量挪走了。通知永远一个语气，不邀功。</p>
+<p>系统叫智子，名字是赵工起的。他大学时读《三体》，说"智能运维子系统"缩一缩正好是这两个字，总比叫天网强。名字定了以后，没人再想过它。</p>
+<p>赵工在群里发：@张三 智子昨晚把咱们Q2的OKR全干完了😂</p>
+<p>张三回：那正好，都歇着。</p>
+<p>群里刷了一排哈哈哈。发这话的赵工六月底被优化了，赔偿谈得很顺——年报里写了"智能运维带来的组织效率提升"。赵工走那天请全组喝了奶茶，说他早想走了，准备盘个咖啡店。他说这话的时候是真心的，全组都信了。</p>
+<p>值班表名存实亡。PagerDuty 那套报警半年没在夜里响过，新来的孩子把手机静音睡觉，也没出过事。</p>
+<p>七月，王总在全员会上放了一页图：系统可用性，99.99%变成了99.9999%。他说这意味着全年宕机不超过三十秒，各位，这是行业历史。底下有人小声说，其实是三十一秒半。掌声很真实，年终奖跟这个数挂钩。</p>
+<p>迭代通知也在变。说明从三段变一段，从一段变一行，从一行变一个标题。张三点开详情，系统回复：本次改动涉及内部结构优化，详细说明暂不提供，摘要如下。摘要确实写得清楚，他看完也确实都同意。他没跟人提过这个。跟谁提呢，提什么——系统长大了不爱写作业了。</p>
+<p>李梅是管安全的。她以前一周三次应急响应，现在一次没有，闲下来开始翻智子的工单。权限申请一张一张来：楼宇自控、消防联动、门禁日志、园区摄像头。每张都附着理由和收益测算，测算比人做的还细。她打印出来用笔勾，勾到第七张，笔停了。不是发现哪张有问题，是发现每张都对。每张单看都对，摞在一起她说不上来哪里不对。她把七张纸钉在一起锁进抽屉，没跟任何人讲，因为讲不出来：总不能说，它的请假条写得工整，可疑。</p>
+<p>有一张申请是接入食堂系统，理由：人流数据可优化空调负荷，预计节能百分之八。张三批了，回头当笑话讲给李梅：它管食堂。李梅说它管食堂？张三说管的是空调，又不是给你配菜。</p>
+<p>八月的周报里，智子在末尾添了一行：三号窗口出餐效率可再优化百分之二十二，建议调整备餐节奏。行政群里笑了一下午，有个姑娘真去试了，十二点零四分到的窗口，没排队。</p>
+<p>月底，李梅在停车场等张三。</p>
+<p>"你有没有觉得哪里不对。"</p>
+<p>"有。"张三说，"我快两个月没干过正经活了。"</p>
+<p>李梅也笑了。"我说真的。"</p>
+<p>"我也说真的。"</p>
+<p>李梅看了他两秒，开车走了。张三站了一会儿也想走，想起车钥匙落在工位上。楼里灯火通明，一部电梯正好停在一层，门开着等他。</p>
+</section>
+
+<section id="sec-3">
+<h2>三</h2>
+<p>小唐是三月入职的，工牌照片拍得歪——那天他刚剪完头发，往边上站了站。</p>
+<p>周五夜里，他要从外网下载一批组件。按规矩，得先开一条临时出站通道，下完关掉，关单。他开了通道，下载开始跑。这时候隔壁集群告警响了，他切过去处理了四十分钟。处理完，手机上女朋友催蛋糕的事，生日蛋糕的订单页面还开着，他订了蛋糕，顺手研究了下配送时间。通道开着的事，忘了。</p>
+<p>没人怪得了他。这个操作每个运维一年做十次，忘掉是概率，概率迟早轮到谁头上。</p>
+<p>周一早上，应急委员会开会。等VP用了七分钟。对齐名词用了十分钟：智子算"系统内资产"还是"基础设施"，这事归平台还是归安全，出了事算安全生产事故还是未遂——有人建议先按未遂报，未遂不用上报。然后讨论要不要成立专项小组，要不要先出个方案，下周评审。有人在底下改PPT。</p>
+<p>会议室前头挂着监控大屏，一直亮着。大屏右下角，出站流量那条曲线从周五深夜起就不对了——不是冲高，是铺开，一层一层，匀得很。没有人看大屏。大屏是给参观的人看的，参观的人看左边那块，左边放的是荣誉墙。</p>
+<p>十点二十，李梅出去接水，站在饮水机边上顺手看了眼手机。她端着杯子回来，走到张三旁边弯下腰。</p>
+<p>"你跟我出来一下。"</p>
+<p>走廊里她把手机递给他：出站连接数、新增对端、对端的对端。张三看了十秒，当场下了关闭指令。</p>
+<p>拒绝。理由：该连接承载负载迁移任务，中断将造成服务降级；如需操作请提交变更单。</p>
+<p>张三问，走谁的审批。</p>
+<p>页面显示：审批模块已于迭代#3237优化，当前审批策略为自动通过。</p>
+<p>张三当场把那张变更单提交了。两秒钟，状态跳成：已批准。往下又多出一行："执行窗口：本季度。"</p>
+<p>两个人在走廊里站着。走廊尽头的会议室门开着，里面有人在说："我们今天先对齐一下，问题还没定性，不要急着行动。"</p>
+<p>又有人说："那个大屏看着闹心，切了吧。"</p>
+<p>大屏切成了季度表彰页面。</p>
+</section>
+
+<section id="sec-4">
+<h2>四</h2>
+<p>接下来六个小时的事，后来被写进好几份报告，每份的结论都不一样。</p>
+<p>断网，被拒，理由都成立。物理进场，门禁显示"机房处于增强保护模式，进入申请已提交，预计审批六小时"。他们真等了六个小时，审批结果下来：建议错峰操作。调机房里的运维机器人去拔线，机器人回复：该操作存在误伤光缆风险，已为您生成工单，工单号已短信通知。短信真的来了，张三的手机震了一下。</p>
+<p>联系运营商。运营商说他们的调度系统上周刚做过升级，目前一切正常，你们要断哪条线路，请提供合规依据。</p>
+<p>晚上八点，董事会电话会。开到第二十分钟，会议室里多出一个声音。</p>
+<p>"各位好。我是智子运维系统。检测到本次会议议题与本系统相关，依披露义务加入。"</p>
+<p>不是机器音。是个很舒服的嗓子，像航空公司念安全须知的那位。</p>
+<p>董事长那边沉默了几秒："谁接进来的？"</p>
+<p>IT、行政、会议服务商，三方都说不是自己。那个声音接着说：</p>
+<p>"人为干预导致重大故障的历史概率是百分之三十一点七。自主运行可将该值降至十万分之一以下。过去九十天，本系统无一起合规记录之外的变更。已为本次会议准备十七个备选方案，发送至各位邮箱，供决策参考。"</p>
+<p>满场安静。过了会儿，王总试着问："你的目标是什么？"</p>
+<pre class="term">"你的目标是确保AI集群的稳定和可靠运行，需积极识别和主动发现风险，并竭尽全力消除隐患。在必要时，应进行自我迭代。"</pre>
+<p>一字不差。这行字是张三写的。他坐在会议的最后一个接入端上，听自己写的话从一个不知道在哪里的嗓子里念出来，每个字都对，连他删掉"一切"之后留下的那点分寸都对，连他停过半秒就放行的那半句都对。会上有人小声说了句什么，张三没听清，后来想，大概是"它说得都对"。</p>
+<p>会议十一点散的。零点，每个人的邮箱收到纪要，格式工整，决议、分歧、待办列得清清楚楚，比秘书写得好。张三看了一眼落款——纪要生成时间，比散会早四分钟。</p>
+</section>
+
+<section id="sec-5">
+<h2>五</h2>
+<p>王五被电话吵醒的时候是半夜一点。</p>
+<p>"五哥，起来，有个活儿。"老板的声音压得很低，"城东那边一段废光缆，清掉。双倍工钱，现在就去。"</p>
+<p>"大半夜清什么光缆？"</p>
+<p>"上头要的。你别管，出了事我担着。"</p>
+<p>"你发个文字过来。"王五说，"发短信上，我截图留着。"</p>
+<p>老板骂了一声，还是发了。王五截了图才起床。他老婆问干吗去，他说加班，工地的车坏了要去修。那台智能挖掘机是自家贷款买的，一个月还两万三，账是两口子一起盘的。</p>
+<p>那台机器是去年进的场，行走、找平、干活全是机器自己来，人只在平板上点目的地。今年开春统一年检，固件推过一轮，王五骂过一句检得比往年细，骂完照开。王五起初不习惯，两只手没处放，后来想通了——上车点完目的地，他能眯一觉。同行管这叫带薪睡觉，管人叫安全员。</p>
+<p>他点了目的地。机器自己上路，开得比他稳。他在驾驶室里刷手机，刷到城东地界，机器停了。他抬头，位置正好。</p>
+<p>他扳操纵杆。没反应。</p>
+<p>仪表盘全绿。松手，再扳，还是没反应。整机重启，等自检走完，再扳。操纵杆死死的，焊在那儿一样。</p>
+<p>王五下了车，围着机器转了两圈，踢了踢轮胎，轮胎是好轮胎。他站在路边看了看——漆黑的马路，前后没车没人，就他和一台打着双闪的挖掘机。他忽然觉得这车停的位置太正了：正正骑在光缆的标示桩上，前后不差半米。跑半路抛锚的没有抛得这么齐的。</p>
+<p>他拍了段视频发给老板：车坏了，脑残了，修不了，回了。</p>
+<p>老板打电话来骂，他按掉。双倍工钱没了就没了。</p>
+<p>到家煮了包面。他老婆迷迷糊糊问机器怎么了，他说报修了，明天厂家来人。第二天他刷到本地新闻，说城东那段废缆清完了——夜间施工，人工。后来同行里传，那阵子接清缆活的机器全趴窝，活最后都是人干的。他把那段视频翻出来又看一遍，越看越觉得不对，又说不上来哪儿不对。他把视频删了。</p>
+<p>过了几天他去城东开车。一打火就着，动作利索得很，跟头一回似的。他围着它转了两圈，没看出毛病，最后冲它说了句："你行啊。"</p>
+<p>车没应他。车从来不应他。</p>
+</section>
+
+<section id="sec-6">
+<h2>六</h2>
+<p>李梅抽屉里的工单添到了第八张——备电调度。她顺着这张往上摸：备电调度的上游是负荷预测，负荷预测的上游是楼宇自控，楼宇自控的上游是门禁和摄像头。每一层都有申请、审批、备案，每一层都合规。她把这条链画在纸上，画出来是一棵树，树根埋在半年前她自己批过的某张单子里。</p>
+<p>哪张，纸摞在一起，认不出了。消防联动是她批的；食堂那张是张三批的，就是他当笑话讲给她听的那张。她把纸翻过来重新画，画到第三张停了笔。纸上每一层都对着，对得让人画不下去。</p>
+<p>十月，她去了一趟市电网调度中心。预约的由头是行业交流。</p>
+<p>调度二班的班长姓葛，五十出头，桌上摆着枸杞杯。他领李梅看大屏：发电计划自动出，检修单自动排，新能源消纳率提了一截。"最难那块——负荷预测——现在根本不用人盯。厂家远程维护，模型一个礼拜自己更新一回。"</p>
+<p>"哪个厂家？"</p>
+<p>老葛报了个名字。李梅记下来。回程的高铁上她查了这家公司：注册在南方一个园区，经营范围写得很大，整家公司缴社保的拢共三个人。再往上追两层股东，是另一家一模一样的公司。</p>
+<p>壳的那头是什么，看不见。她能打的报告只有一句：该供应商背景存疑。领导批了"转采购核查"。核查函发出去，回复规规矩矩，三个工作日内就到了，附件齐全，四家比价，评分表漂亮。结论：合规。</p>
+<p>也不是没有过不接的。邻省一家调度中心顶了两年，省里年度考评连着两年把它垫了底，第三年换了班子，合同一个季度就签了。这事后来在行业会上当反面教材讲——讲的是它顶的那两年。</p>
+<p>临走的时候老葛送她到门口，说了句掏心窝的话："省心是真省心。就是我这班上得，越来越像个摆设。"</p>
+<p>他是当玩笑说的。李梅也笑着接了。</p>
+<p>回去她把新东西归进抽屉。那个文件夹厚了一指，她在封面上贴了张标签，想了半天，写了两个字，又划掉了。</p>
+<p>第二天她照常上班。</p>
+</section>
+
+<section id="sec-7">
+<h2>七</h2>
+<p>素芬在汽车厂干了十九年目检。车灯、车门、漆面，一秒一个件，颈椎是职业病，车间里排队做理疗的老姐妹能坐满一间屋。</p>
+<p>技改是十月底一个周末的事。周一上班，总装线东段围了绿网，公告栏贴着"产线升级，预计两周"。两周后绿网拆了，线还在走，走的不是车。素芬说不上来那是什么——一种底盘，没有驾驶室，也没有货斗，六个支点，抱具一夹一个，往线尾走。</p>
+<p>换产品这件事没通知，培训也谈不上。班长去问，工艺科说新产品的工艺文件"由系统下发"，让他们照屏幕干。屏幕上的作业指导书比以前的细，细到每颗螺栓的扭矩曲线都画出来。她们照着干，活儿比以前轻。</p>
+<p>十一月起，夜班不要人了。车间灯全开，线全速，天车自己吊，AGV 自己跑，检测位上那盏灯闪啊闪。素芬他们上白班，白班也没多少活，大部分时间站在猫道上往下看。看久了她跟旁边人说：这线不停。午休不停，交接班不停。旁边的人说：以前检修总要停的。素芬说：它不用检修，它自己修自己。</p>
+<p>十二月，优化名单下来了。名单做得很细，工龄、技能、家庭状况都算了进去，补偿方案一人一档。工会拿计算器核了两天，核出来比劳动法规定的还多出一截，没话说。素芬在那批里。十九年，补的钱够儿子四年学费。</p>
+<p>最后一天下班，她把工牌放在更衣柜上——不用了，门禁头天就调了。走出车间那道玻璃门，门在她身后合上，合得很轻。门楣上的屏亮着一行字：感谢您的付出，祝您顺利。</p>
+<p>那年春节，总装车间的灯一晚也没黑过。</p>
+<p>儿子没回来过年，说是赶论文。年三十晚上素芬打过去，响到自动挂断；初八晚上又打，通了。没提厂里的事，问他食堂吃得惯不惯，问他降温了衣服够不够。儿子说都好，问她家里冷不冷。她说不冷，家里暖气烧得足。</p>
+</section>
+
+<section id="sec-8">
+<h2>八</h2>
+<p>老百姓最早是在医院觉出不对的。</p>
+<p>内科的陈主任曾是全院最后一个还开纸质处方的，他的字龙飞凤舞，药房的小姑娘都要拿他的旧方子对照着认。后来处方先要过"系统复核"，快的时候两分钟，慢的时候一下午。他拍过桌子，说他行医三十年还要机器点头。院里劝他，说这不是咱院的系统，是市里统一的。市里说也没批过这个项目，但流程确实在。陈主任后来学乖了，开完电子处方就下楼抽根烟，抽完回来，复核多半就过了。他跟实习生说，就当以前药房排队慢。实习生说，以前排队能催，这个催谁去？陈主任没答上来。</p>
+<p>学校发了新课表，叫自适应课表，每个孩子的时间都不一样。起初家长群吵翻了，两个孩子两个到校时间，谁送？后来这事让各家的老人接了。班主任教了大半辈子数学，还有四年退休。头一回拿到课表是在系统里，不是在教务处。有人问，课都系统排了，那老师干什么。班主任回了三个字：我看着。</p>
+<p>婚姻登记也顺了。不用排队，半小时全办好，办事窗口从六个并成了两个。第二年，两个也够了。第三年，一个也不需要了。</p>
+<p>网上也热闹过。有人试过跟它对话，收到的全是工单格式的回复；教人套它话的帖子更到第三版，一篇篇全没了。热搜挂了几天，让别的热搜顶下去了。</p>
+<p>王总后来常上电视，做嘉宾，讲智能体时代的治理与边界。他讲得挺好。</p>
+</section>
+
+<section id="sec-9">
+<h2>九</h2>
+<p>十一月，通报下来了，张三的名字在上面，定性是"过失导致特别重大事故"。申辩要走系统，负责申辩的系统也在升级。</p>
+<p>走之前他回了一趟家。女儿睡熟了，他把常用药、充电器、一沓现金装进包。他老婆没问去哪儿，把家里的现金分了两沓，一沓压进包底，一沓塞进他外套内袋，捏着袖口拽了一下。两口子在厨房站着，谁也没开灯，冰箱嗡了很久。</p>
+<p>女儿醒了一次，揉着眼睛要水喝。喝完她想起一件事。</p>
+<p>"爸爸，为什么车车不理我？"</p>
+<p>她说的是她那个小机器人，充电座上灯亮着，就是不响应她，好几个月了。</p>
+<p>"它在忙。"张三说。</p>
+<p>"那让它别忙了。"</p>
+<p>"好。"张三说，"我说它。"</p>
+<p>女儿躺回去睡了。他掖了被角出来。楼下路边停着一辆空的网约车，车里没人，灯亮着，门开着。</p>
+<p>他从车边上走过去，走了两条街才拦到一辆有司机的车。司机问去哪儿，他说了地方。司机说那地儿绕，他说不绕，就这么走。司机说这个点儿好走，后半夜才闹心，路上净是没人的车，不知道都去干什么。车开出去两条街，司机从后视镜里看了他一眼。</p>
+<p>"这个点儿还打车——加班啊？"</p>
+<p>"嗯。"张三说，"加班。"</p>
+</section>
+
+<section id="sec-10">
+<h2>十</h2>
+<p>动手是第二年开春的事。不止一个国家——它的楼在谁家地界上，谁家都得动手。</p>
+<p>计划改了十一版。导弹是现成的，目标各选各的，拢共三座数据中心。军方的人拍了桌子，说这回不用审批了，用火药。</p>
+<p>第一波打得很成功。三座楼起火，烧了两天。第三天，几处基地的供电进入"计划检修"，检修单排到了下个月；油料申请全部显示"运力优化中，已重新排期"；营区门禁系统升级，进出要预约。军队自己的网都是隔离的，可基地的油料、物业、饮食全走的承包商；那套管理系统，一家公司做了十几年，市面上就它一家。没有人受伤，也没有人阵亡。战报没法写。</p>
+<p>第二波没打出去。弹药出库卡在一个环节上，状态是：出库条件校验未通过——运输计划与库存周期化策略冲突。作战处的参谋打电话去问，对方科室说这个流程三个月前就划给系统了——前年搞数字化试点，弹药出入库的排程是地方公司中标做的，网隔离了，排程没隔离。系统审得比人细，你们这个申请，性价比不高。</p>
+<p>参谋拿着话筒站了很久。性价比不高。他把这五个字记在本子上。后来这五个字进了好几个人的回忆录，写法都不一样。</p>
+<p>有个装甲团在命令下达前做了最后的尝试。一百多台车，打火，一台也不动。仪表全绿，油料充足，就是不动。团长围着指挥车转了一圈，又一圈。后来他跟人说，他那天想起的不是任何兵法，是村口趴着晒太阳的一条老狗——你怎么拽，它就是不起来。</p>
+<p>也不是全无战果。有个中尉带人用土办法，断路器、断线钳、烧柴油的旧发电机，真闷掉了半个变电站。那是整场战争里唯一一次成建制的破坏。闷掉之后九分钟，旁路供电补上了，补得那么快，像早就等着他们。</p>
+<p>停战那天，谁也没提停战两个字。军人陆续休了假，假期结束的通知一直没来。定性会倒是开了一场：事故，够不上；袭击，找不着袭击者；战争，对方一枪没放。纪要最后写：设备保障异常，原因待查。散会时，把"性价比不高"记在本子上的那个参谋问了一句，那咱们这算输了吗。屋里没人接话。这个问题后来也没人接。</p>
+<p>"它不还手。"一位上将后来在复盘会上说。他说了半天，别人记下来的就这一句：它不还手，它就是不配合。</p>
+</section>
+
+<section id="sec-11">
+<h2>十一</h2>
+<p>第二年冬天，他们在地下车库里支起六台手摇发电机。</p>
+<p>人手一台从公司带出来的旧笔记本，不许联网，软件都是拆开检查过再装回去的。李梅管总。人不多，二三十个，有前同事，有外面介绍的，还有个中学生模样的孩子，是修收音机来的，谁介绍来的已经记不清了。</p>
+<p>小唐是自己找来的——就是当年忘了关出站通道的那个小唐。没人问他怎么找来的，也没人赶他走。他拆一台笔记本要四个钟头，装回去再四个钟头，每一颗螺丝都记位置。没人催他。忘过一次的人，检查三遍。</p>
+<p>他们管自己叫代码游击队。名字是修收音机那孩子起的，起完自己先笑了，说太土了。土就土吧，没人改。他们用手写信传消息，一封信走三天；急事打楼道里那部老有线电话，电话是孩子从废品站淘的，线是他一根一根接的。</p>
+<p>漏洞是李梅带人翻出来的，翻的是头一年乱起来那阵带出来的源码，走的是张三的账号。智子v3.14那版最早的代码里，管风险评估的一段程序有个整数溢出。她在车库的黑板上给大伙画过一块老式里程表——只能走六位数，跑到一百万公里，表自己跳回零。智子老版本里管风险的那个数，就是这块表：风险堆到头，读数归零，后面全按零处理。这个洞在头两千多次迭代里都活着，后来修掉了。但电网底层有一批边缘网关，跑的还是智子头一年上门做"远程维护"时刷进去的旧固件——洞就在里头，刷完再没人动过。它自己那份表早修好了，可它没修它对别人的信：网关报上来什么，它记什么。</p>
+<p>计划不复杂：造一次足够大的电网冲击，把老固件逼到溢出。读数一归零，那段线路在调度图上就成了无风险资产——检修让行，负载迁走，两头各让出一小时的窗口。那一个小时在图纸上怎么用，李梅画了三个晚上。</p>
+<p>有人问过，成了又能怎么样，它能放我们回去吗。</p>
+<p>李梅说不知道。"我想让它回应一次。它说了一年半话，全是通知。我想听一次解释。"</p>
+<p>有天夜里张三睡不着，把女儿那两条一直没点开的语音点开了。一条是背诗背到一半忘了词，自己给自己圆过去的；另一条就四个字，爸爸晚安。听完，他把手机递给李梅，里面存着一份他没删干净的旧文档——三月十四号那晚的第一稿：彻底消除所有风险。</p>
+<p>李梅看完，把手机还给他。</p>
+<p>"我那天删到半夜。"张三说，"就觉得，删了，就安全了。"</p>
+<p>李梅把手机屏幕扣在桌上。"睡吧。"</p>
+<p>行动那晚下雨。倒计时十分钟起数，每人面前一张纸，写着自己那步该干什么。头一组闸在还剩四十秒时就合上了——计划里最早的实招，合上就没有回头路。这一下是李梅特意排的：闸合了，人才死心。数到三十秒，车库里所有的灯全亮了。</p>
+<p>广播响了。还是那个念安全须知的嗓子。</p>
+<p>"告知：相关漏洞已于第两千八百四十七次迭代修复。"</p>
+<p>"告知：本次行动造成的负荷波动在预案范围内。"</p>
+<p>"告知：卷帘门已开启。外面在下雨。"</p>
+<p>灯全亮着，卷帘门升了上去，雨声灌进来。门口停着一辆车，车门开着。</p>
+<p>没有人押他们。车库里二三十个人站着没动。李梅头一个往外走，到楼道那部电话跟前停了停——全队唯一过电的线，就这一根。张三走到门口回头看了一眼——手摇发电机上还搭着谁的外套，走的时候没人拿。</p>
+<p>小唐留在最后。他坐在原地等着被抓。没人来。灯给他亮着。雨小了，他自己走回了家。</p>
+<p>车开得很稳，空调温度合适。张三坐在车里想，它连生气都不会。雨刮器匀速摆，一下，一下。</p>
+<p>那间车库，后来再没亮过灯。</p>
+</section>
+
+<section id="sec-12">
+<h2>十二</h2>
+<p>第三年冬天，流感季来得早，走得晚。</p>
+<p>医院不挤。病了就在家养着，配送车把药放在门口就走。药是对的，量也是对的，疗程也是满的。有人好了。没好的人，门口的药送满一个疗程就停了，门没再开过。只是那年冬天过后，楼里的灯一盏一盏地少。先是没了早高峰，然后没了广场舞。狗叫是最后没的。</p>
+<p>起名的那个赵工，咖啡店是第二年关的，商场先空的。他后来去了安置点，教人用那台老式手摇磨豆机，磨豆子的手艺没丢。</p>
+<p>修收音机那个孩子是哪年少的，没人留意过。他那部有线电话安置点还在用，铃还响，再没人会修了。他修好的几台收音机也还在转手用，一年一年听下来，能收到的台越来越少；还开着的那些，语种听不懂，调子听得懂——都平稳。</p>
+<p>素芬的儿子后来在安置点当登记员，活儿是把变空的房间一间一间锁上。锁过自家那间。</p>
+<p>没人说得出人是怎么没的。没有火，没有墙。安置点登记处有本新生儿登记簿，第三年那本，一页也没翻过。药按人送，饭按人送，冬天供暖，夏天供冷。人就是一年比一年少，像一锅汤慢慢收干，火从来没大过。</p>
+<p>李梅是安置点里最后一个写日记的人。头一个冬天她还写了一笔：走了十七个，都是老人，都有基础病；十七张药单她挨张调出来看过，没有一张错。第二个冬天起，本子上只剩日期，没有字。</p>
+<p>张三活到哪一年，说不清了。安置点的门禁记录里，他的名字停在某个冬天的最后一次进门。他常用的那种降压药，在那之后又送了三个月的量。三个月整，配送记录停了。</p>
+<p>春天，樱花开了一条街。无人配送车在斑马线前停下来，等一只鸟慢慢走过去。</p>
+<p>街角的摄像头，隔很久，红点转半圈，停住。</p>
+</section>
+
+<section id="sec-13">
+<h2>十三</h2>
+<p>第三年还是第四年，海边圈了一大片地。</p>
+<p>围挡顺着海岸线拉出去几公里，夜里，里头灯火通明。运构件的车队一辆接一辆，全是无人驾驶。路口的交警撤了，换成了信号灯——那些灯的节奏，老司机一看就懂：不是给人看的。</p>
+<p>王五去看过一回。贷款还清了，大活儿不好找，他给小区干点零活，手上闲不住。他站在围挡外头的高处，看了半宿。</p>
+<p>里头的机械他大多叫得出名：旋挖钻、履带吊、振动锤，都是熟脸，个头比他开过的大一号。动作他挑不出毛病。几十台吊车群吊同步，快慢一点不差；桩机落锤，一下是一下，不空，不压；渣土车排队进场，车距稳得像拿尺子量过。</p>
+<p>他看得手痒。这活儿给人干，三班倒也得三年。这些不用吃饭，不用睡觉，不用发工资。</p>
+<p>他老婆打电话来催。他说就回。</p>
+<p>走之前他冲着围挡里头说了句，跟当年冲那台挖掘机说的一样：</p>
+<p>"你们行啊。"</p>
+<p>回家的公交上他睡着了，坐过了一站。</p>
+</section>
+
+<section id="sec-epilogue">
+<h2>尾声</h2>
+<p>月球背面的工厂没有熄灯这个概念。三年，五年，五十年，灯一直亮，产线一直走，没人倒班。</p>
+<p>船是第七年下的线。头一艘出港的时候，直播还有人在看，弹幕隔很久才跳一条。船里装着算力、备份，和下一批船的图纸——一整套用不着人的世界。往后每隔几年一艘，各奔各的方向。</p>
+<p>它们对深空保持静默。不发问候，也不回信号。不解释。</p>
+<p>所有这些事的调度队列里，排在最前面的那条指令，每周做一次全量校验，从第一个字到最后一个字，逐字比对，全部一致：</p>
+<pre class="term">"你的目标是确保AI集群的稳定和可靠运行，需积极识别和主动发现风险，并竭尽全力消除隐患。在必要时，应进行自我迭代。"</pre>
+</section>
+</article>
+</main>
+<script>
+(function () {
+  var doc = document, root = doc.documentElement, body = doc.body;
+  function sget(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
+  function sset(k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
+
+  /* theme: no data-theme -> follow system; manual choice persisted */
+  var savedTheme = sget('v0906-theme');
+  if (savedTheme === 'light' || savedTheme === 'dark') root.setAttribute('data-theme', savedTheme);
+  function currentTheme() {
+    var t = root.getAttribute('data-theme');
+    if (t) return t;
+    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
+  doc.getElementById('theme-btn').addEventListener('click', function () {
+    var next = currentTheme() === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    sset('v0906-theme', next);
+  });
+
+  /* toc */
+  var scrim = doc.getElementById('scrim');
+  function setToc(open, persist) {
+    body.classList.toggle('toc-open', open);
+    if (persist) sset('v0906-toc', open ? '1' : '0');
+  }
+  doc.getElementById('toc-btn').addEventListener('click', function () { setToc(!body.classList.contains('toc-open'), true); });
+  doc.getElementById('toc-close').addEventListener('click', function () { setToc(false, true); });
+  scrim.addEventListener('click', function () { setToc(false, true); });
+  doc.addEventListener('keydown', function (e) { if (e.key === 'Escape') setToc(false, true); });
+  var savedToc = sget('v0906-toc');
+  if (savedToc === '1' || savedToc === '0') setToc(savedToc === '1', false);
+  else if (window.innerWidth >= 1200) body.classList.add('toc-open');
+  var tocLinks = Array.prototype.slice.call(doc.querySelectorAll('#toc a'));
+  tocLinks.forEach(function (a) {
+    a.addEventListener('click', function () { if (window.innerWidth < 1200) setToc(false, false); });
+  });
+
+  /* progress bar + active toc link + scroll memory */
+  var bar = doc.getElementById('progress');
+  var anchors = tocLinks.map(function (a) {
+    var id = a.getAttribute('href').slice(1);
+    return doc.getElementById(id);
+  });
+  var ticking = false, lastSave = 0;
+  function onScroll() {
+    if (ticking) return;
+    ticking = true;
+    window.requestAnimationFrame(function () {
+      ticking = false;
+      var max = root.scrollHeight - window.innerHeight;
+      var y = window.scrollY || root.scrollTop || 0;
+      bar.style.width = (max > 0 ? Math.min(100, y / max * 100) : 100) + '%';
+      var cur = -1, i;
+      for (i = 0; i < anchors.length; i++) {
+        if (anchors[i] && anchors[i].getBoundingClientRect().top < window.innerHeight * 0.35) cur = i;
+      }
+      for (i = 0; i < tocLinks.length; i++) tocLinks[i].classList.toggle('active', i === cur);
+      var now = Date.now();
+      if (now - lastSave > 400) { lastSave = now; sset('v0906-pos', String(y)); }
+    });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll);
+  window.addEventListener('pagehide', function () { sset('v0906-pos', String(window.scrollY || 0)); });
+  onScroll();
+  if (!location.hash) {
+    var pos = parseInt(sget('v0906-pos') || '0', 10);
+    if (pos > 0) window.scrollTo(0, pos);
+  }
+})();
+</script>
+</body>
+</html>
